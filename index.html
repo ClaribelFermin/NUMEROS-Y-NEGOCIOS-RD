@@ -152,6 +152,18 @@ input.search{min-width:220px}
     <button type="submit">Acceder</button>
   </form>
 </div>
+   <script>
+document.getElementById('access-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const passcode = document.getElementById('passcode').value;
+  if (passcode === 'Cataclari05') {
+    document.getElementById('access-container').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+  } else {
+    alert('Clave incorrecta');
+  }
+});
+</script>
   <div id="main-content" style="display: none;">
 <header class="top"><button id="menuBtn" aria-label="Abrir menú">☰</button><div class="brand"><b>Mi Negocio Inteligente</b><small>NÚMEROS Y NEGOCIOS RD</small></div><div class="grow"></div><div id="saveState"></div></header>
 <nav id="nav" aria-label="Secciones"></nav>
