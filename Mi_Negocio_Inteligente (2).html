@@ -1,0 +1,1668 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi Negocio Inteligente · NÚMEROS Y NEGOCIOS RD</title>
+<meta name="description" content="Sistema de inventario, administración y control financiero para colmados. Herramienta educativa y de control interno.">
+<style>:root{
+  --navy:#14284b; --navy2:#1d3a6b; --green:#1e7b4f; --green2:#e6f3ec; --yellow:#f2b705; --yellow2:#fff6d6;
+  --bg:#f4f7f5; --card:#ffffff; --ink:#1b2430; --mute:#5f6b78; --line:#d9e1dc; --bad:#b3261e; --bad2:#fde8e6; --warn:#8a5a00; --ok:#1e7b4f;
+  --r:12px; --nav:236px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:Calibri,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;font-size:15.5px;color:var(--ink);background:var(--bg);line-height:1.45}
+h1,h2,h3{margin:0;color:var(--navy)}
+h1{font-size:25px;font-weight:700}
+h2{font-size:18px;font-weight:700}
+h3{font-size:15.5px;font-weight:700}
+button,input,select,textarea{font:inherit;color:inherit}
+.top{position:fixed;top:0;left:0;right:0;height:54px;background:var(--navy);color:#fff;display:flex;align-items:center;gap:12px;padding:0 14px;z-index:30;box-shadow:0 1px 6px rgba(0,0,0,.2)}
+.top .brand{display:flex;flex-direction:column;line-height:1.1}
+.top .brand b{font-size:17px;letter-spacing:.2px}
+.top .brand small{color:var(--yellow);font-size:11px;letter-spacing:1.4px;font-weight:700}
+.top .grow{flex:1}
+#menuBtn{display:none;background:transparent;border:0;color:#fff;font-size:26px;cursor:pointer;padding:4px 8px}
+#saveState{font-size:12.5px;color:#cfe3d8}
+#saveState.warn{color:var(--yellow);font-weight:700}
+nav#nav{position:fixed;top:54px;bottom:0;left:0;width:var(--nav);background:#fff;border-right:1px solid var(--line);overflow-y:auto;padding:10px 8px;z-index:20}
+nav#nav a{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;margin:2px 0;border-radius:9px;color:var(--navy);text-decoration:none;font-weight:600;font-size:14.5px}
+nav#nav a:hover{background:var(--green2)}
+nav#nav a.on{background:var(--green);color:#fff}
+nav#nav .sep{font-size:11px;letter-spacing:1.2px;color:var(--mute);font-weight:700;margin:14px 12px 4px;text-transform:uppercase}
+nav#nav .cnt{background:var(--bad);color:#fff;border-radius:99px;font-size:11.5px;padding:1px 8px;font-weight:700}
+main#main{margin-left:var(--nav);padding:76px 22px 40px;max-width:1280px}
+.page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.page-h p{margin:2px 0 0;color:var(--mute)}
+.howto{background:var(--yellow2);border-left:5px solid var(--yellow);border-radius:8px;padding:10px 14px;margin:0 0 16px;font-size:14.5px}
+.howto b{color:var(--navy)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:16px}
+.card h2{margin-bottom:10px}
+.grid{display:grid;gap:14px}
+.kpis{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:13px 15px;border-top:4px solid var(--green)}
+.kpi.warn{border-top-color:var(--yellow)} .kpi.bad{border-top-color:var(--bad)} .kpi.navy{border-top-color:var(--navy)}
+.kpi .l{font-size:13px;color:var(--mute);font-weight:600}
+.kpi .v{font-size:22px;font-weight:700;color:var(--navy);margin-top:2px;word-break:break-word}
+.kpi .s{font-size:12.5px;color:var(--mute);margin-top:2px}
+.charts{grid-template-columns:repeat(auto-fit,minmax(420px,1fr))}
+.chart{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.chart svg{width:100%;height:auto;display:block}
+.chart h3{margin-bottom:6px}
+.bar-pos{fill:var(--green)} .bar-navy{fill:var(--navy2)} .bar-neg{fill:var(--bad)} .bar-yel{fill:var(--yellow)}
+.axis{stroke:#cfd8d2;stroke-width:1} .gl{stroke:#e7ece9;stroke-width:1}
+.tx{font-size:15px;fill:#5f6b78} .tx-b{font-size:16px;fill:#1b2430}
+table{border-collapse:collapse;width:100%;font-size:14px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
+th{background:var(--navy);color:#fff;text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap;position:sticky;top:0}
+td{padding:7px 10px;border-top:1px solid var(--line);vertical-align:middle}
+tr:nth-child(even) td{background:#f8faf9}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--green2)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tfoot td{background:var(--yellow2)!important;font-weight:700;border-top:2px solid var(--navy)}
+td.neg,.neg{color:var(--bad)}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}
+.b-ok{background:var(--green2);color:var(--ok)} .b-warn{background:var(--yellow2);color:var(--warn)} .b-bad{background:var(--bad2);color:var(--bad)} .b-info{background:#e5ecf8;color:var(--navy2)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--green);background:var(--green);color:#fff;padding:8px 14px;border-radius:9px;font-weight:700;cursor:pointer;font-size:14.5px}
+.btn:hover{filter:brightness(1.08)}
+.btn.sec{background:#fff;color:var(--green)} .btn.navy{background:var(--navy);border-color:var(--navy)}
+.btn.danger{background:#fff;color:var(--bad);border-color:var(--bad)} .btn.sm{padding:4px 10px;font-size:13px;border-radius:7px}
+.btn.yel{background:var(--yellow);border-color:var(--yellow);color:#2b2200}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 12px}
+.bar .grow{flex:1}
+.pbar{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.pbar label{font-weight:700;color:var(--navy);font-size:13.5px}
+input,select,textarea{border:1px solid #b9c5be;border-radius:8px;padding:7px 9px;background:#fff;min-width:0}
+input:focus,select:focus,textarea:focus,.btn:focus-visible,a:focus-visible{outline:3px solid #f2b70588;outline-offset:1px}
+input.search{min-width:220px}
+.notice{border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:14.5px}
+.n-ok{background:var(--green2);border-left:5px solid var(--green)} .n-bad{background:var(--bad2);border-left:5px solid var(--bad)} .n-warn{background:var(--yellow2);border-left:5px solid var(--yellow)}
+.alert{border:1px solid var(--line);border-left:6px solid var(--yellow);border-radius:10px;background:#fff;padding:12px 14px;margin-bottom:12px}
+.alert.alta{border-left-color:var(--bad)} .alert.media{border-left-color:var(--yellow)}
+.alert h3{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.alert ul{margin:6px 0 8px 18px;padding:0;font-size:14px}
+.alert .rev{background:var(--yellow2);border-radius:7px;padding:6px 10px;font-size:14px}
+.stmt{max-width:640px}
+.stmt td{border-top:1px solid #eef2ef}
+.stmt tr.sub td{font-weight:700;background:var(--green2)!important;border-top:2px solid var(--green)}
+.stmt tr.tot td{font-weight:800;background:var(--yellow2)!important;border-top:2px solid var(--navy)}
+.stmt td.ind{padding-left:26px;color:var(--mute)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.modal-bg{position:fixed;inset:0;background:rgba(20,40,75,.55);z-index:60;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:30px 12px}
+.modal{background:#fff;border-radius:14px;max-width:560px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.modal.wide{max-width:960px}
+.modal header{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal .body{padding:16px 18px}
+.modal footer{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.modal .x{border:0;background:transparent;font-size:24px;cursor:pointer;color:var(--mute)}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.f label{display:block;font-weight:700;font-size:13.5px;color:var(--navy);margin-bottom:3px}
+.f input,.f select,.f textarea{width:100%}
+.f small{color:var(--mute);display:block;margin-top:2px}
+.f.full{grid-column:1/-1}
+.err{background:var(--bad2);color:var(--bad);border-radius:8px;padding:8px 12px;margin-top:10px;font-weight:600;white-space:pre-line}
+.lines{width:100%;margin-top:6px}
+.lines td,.lines th{padding:5px 6px}
+.lines input,.lines select{width:100%}
+.lines td.t{white-space:nowrap;text-align:right;font-weight:700}
+#toastRoot{position:fixed;right:14px;bottom:14px;z-index:90;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.3);font-weight:600;max-width:340px}
+.toast.bad{background:var(--bad)}
+.welcome{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:16px;padding:26px;margin-bottom:18px}
+.welcome h1{color:#fff;font-size:27px}
+.welcome p{color:#dbe6f6;max-width:720px}
+.welcome ol{color:#fff;padding-left:20px;line-height:1.8}
+.pill{display:inline-block;background:var(--yellow);color:#2b2200;font-weight:800;border-radius:99px;font-size:11.5px;padding:2px 10px;letter-spacing:.8px}
+.muted{color:var(--mute)} .right{text-align:right}
+.foot{margin-top:26px;font-size:12.5px;color:var(--mute);border-top:1px solid var(--line);padding-top:10px}
+@media (max-width:760px){
+  .lines thead{display:none}
+  .lines,.lines tbody{display:block}
+  .lines tr.lrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px;background:#fbfdfc}
+  .lines tr.lrow td{display:block;padding:0;border:0;background:transparent!important}
+  .lines tr.lrow td:first-child{grid-column:1/-1}
+  .lines tr.lrow td[data-l]::before{content:attr(data-l);display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px}
+  .lines tr.lrow td.t{text-align:left;align-self:end}
+  .lines tr.lrow td.t::before{content:"Total línea: "}
+}
+@media (max-width:900px){
+  #menuBtn{display:block}
+  nav#nav{transform:translateX(-102%);transition:transform .2s;box-shadow:4px 0 18px rgba(0,0,0,.2);width:min(82vw,290px)}
+  body.navopen nav#nav{transform:none}
+  main#main{margin-left:0;padding:70px 12px 30px}
+  .two{grid-template-columns:1fr}
+  h1{font-size:21px}
+  .kpis{grid-template-columns:repeat(2,1fr);gap:10px}
+  .kpi .v{font-size:18px}
+  .charts{grid-template-columns:1fr}
+  .modal-bg{padding:10px 6px}
+}
+@media (max-width:480px){ .kpis{grid-template-columns:1fr} input.search{min-width:0;width:100%} }
+@media print{
+  .top,nav#nav,.noprint,#toastRoot,.pbar,.howto,.btn{display:none!important}
+  body{background:#fff;font-size:12px}
+  main#main{margin:0;padding:0;max-width:none}
+  .card,.kpi,.chart{border:0;padding:0}
+  th{background:#eee!important;color:#000!important;-webkit-print-color-adjust:exact}
+  .hide-reg .reg{visibility:hidden}
+  tr{page-break-inside:avoid}
+}
+</style></head><body>
+<header class="top"><button id="menuBtn" aria-label="Abrir menú">☰</button><div class="brand"><b>Mi Negocio Inteligente</b><small>NÚMEROS Y NEGOCIOS RD</small></div><div class="grow"></div><div id="saveState"></div></header>
+<nav id="nav" aria-label="Secciones"></nav>
+<main id="main"></main>
+<div id="modalRoot"></div><div id="confirmRoot"></div><div id="toastRoot" aria-live="polite"></div>
+<noscript>Esta aplicación necesita JavaScript activado.</noscript>
+<script>/* ============================================================
+   MI NEGOCIO INTELIGENTE · Motor contable
+   NÚMEROS Y NEGOCIOS RD
+   Herramienta educativa y de control interno. No es un sistema
+   fiscal ni contable certificado.
+   Método de inventario: costo promedio ponderado móvil.
+   ============================================================ */
+const MNI = (function () {
+  'use strict';
+
+  /* ---------- utilidades ---------- */
+  const r2 = x => Math.round(x * 100 + (x >= 0 ? 1e-9 : -1e-9)) / 100;
+  const pad = n => String(n).padStart(2, '0');
+  const fmtD = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  const todayStr = () => fmtD(new Date());
+  const parseD = s => { const [y, m, d] = s.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d)); };
+  const addDays = (s, n) => { const d = parseD(s); d.setUTCDate(d.getUTCDate() + n); return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()); };
+  const diffDays = (a, b) => Math.round((parseD(a) - parseD(b)) / 86400000);
+  const monthStart = s => s.slice(0, 7) + '-01';
+  const monthEnd = s => { const [y, m] = s.split('-').map(Number); const d = new Date(Date.UTC(y, m, 0)); return y + '-' + pad(m) + '-' + pad(d.getUTCDate()); };
+  const BEGIN = '0000-00-00', END = '9999-12-31';
+  const sum = (arr, f) => arr.reduce((a, x) => a + (f ? f(x) : x), 0);
+
+  /* ---------- estado inicial ---------- */
+  function emptyState() {
+    return {
+      version: 1, seq: 1,
+      config: {
+        negocio: 'Mi Negocio', propietario: '', fechaInicio: todayStr(),
+        cajaInicial: 0, bancoInicial: 0, equipos: 0,
+        diasAlertaVence: 30, diasAlertaPago: 7,
+        itbis: { activo: false, incluido: true, tasaGeneral: 18, tasaReducida: 16 },
+      },
+      productos: [], suplidores: [], compras: [], ventas: [], devoluciones: [], ajustes: [],
+      gastos: [], pagos: [], cobros: [], movimientos: [], cierres: [], cxpIni: [], cxcIni: [],
+      conteo: { fecha: '', items: {} },
+    };
+  }
+  const nextId = S => S.seq++;
+
+  /* ---------- ITBIS (parámetro opcional) ---------- */
+  // comps: [{v, s}] con s = +1 / -1. Devuelve bases por componente, base, itbis y total.
+  function mk(comps, rate, incl) {
+    const net = sum(comps, c => c.s * c.v);
+    if (!rate) return { bases: comps.map(c => r2(c.v)), base: r2(net), itbis: 0, total: r2(net) };
+    if (incl) {
+      const bases = comps.map(c => r2(c.v / (1 + rate)));
+      const base = r2(sum(comps, (c) => 0) + comps.reduce((a, c, i) => a + c.s * bases[i], 0));
+      const total = r2(net);
+      return { bases, base, itbis: r2(total - base), total };
+    }
+    const bases = comps.map(c => r2(c.v));
+    const base = r2(net);
+    const total = r2(base * (1 + rate));
+    return { bases, base, itbis: r2(total - base), total };
+  }
+
+  /* ============================================================
+     CÁLCULO PRINCIPAL (reproduce todos los movimientos en orden)
+     ============================================================ */
+  function compute(S) {
+    const cfg = S.config, it = cfg.itbis;
+    const P = {}; S.productos.forEach(p => { P[p.codigo] = p; });
+    const rateOf = code => {
+      if (!it.activo) return 0;
+      const p = P[code];
+      if (p && p.itbis === 'exento') return 0;
+      if (p && p.itbis === 'reducida') return it.tasaReducida / 100;
+      return it.tasaGeneral / 100;
+    };
+    const incl = !!(it.activo && it.incluido);
+    const costoBase = p => { const r = rateOf(p.codigo); return (r && incl) ? r2(p.costo / (1 + r)) : p.costo; };
+    const R = { P, errors: [], K: {}, ledger: [], itbisEv: [], rateOf, incl };
+
+    /* --- compras --- */
+    R.compras = S.compras.map(c => {
+      const lineas = c.lineas.map(l => {
+        const rate = rateOf(l.codigo);
+        const gross = r2(l.cant * l.costo);
+        const m = mk([{ v: gross, s: 1 }, { v: l.descuento || 0, s: -1 }, { v: l.adicional || 0, s: 1 }], rate, incl);
+        return { ...l, gross, gB: m.bases[0], dB: m.bases[1], aB: m.bases[2], base: m.base, itbis: m.itbis, total: m.total };
+      });
+      return { ...c, lineas, base: r2(sum(lineas, l => l.base)), itbis: r2(sum(lineas, l => l.itbis)), total: r2(sum(lineas, l => l.total)) };
+    });
+    const compraById = {}; R.compras.forEach(c => { compraById[c.id] = c; });
+
+    /* --- ventas --- */
+    R.ventas = S.ventas.map(v => {
+      const lineas = v.lineas.map(l => {
+        const rate = rateOf(l.codigo);
+        const gross = r2(l.cant * l.precio);
+        const m = mk([{ v: gross, s: 1 }, { v: l.descuento || 0, s: -1 }], rate, incl);
+        return { ...l, gross, gB: m.bases[0], dB: m.bases[1], base: m.base, itbis: m.itbis, total: m.total, cost: 0 };
+      });
+      return { ...v, lineas, base: r2(sum(lineas, l => l.base)), itbis: r2(sum(lineas, l => l.itbis)), total: r2(sum(lineas, l => l.total)) };
+    });
+    const ventaById = {}; R.ventas.forEach(v => { ventaById[v.id] = v; });
+
+    /* --- eventos de inventario --- */
+    const ev = [];
+    S.productos.forEach(p => ev.push({ k: 'ini', date: BEGIN, pri: 0, id: 0, p }));
+    R.compras.forEach(c => c.lineas.forEach(l => ev.push({ k: 'compra', date: c.fecha, pri: 1, id: c.id, c, l })));
+    R.ventas.forEach(v => v.lineas.forEach(l => ev.push({ k: 'venta', date: v.fecha, pri: 2, id: v.id, v, l })));
+    R.devs = [];
+    S.devoluciones.forEach(d => {
+      if (d.tipo === 'venta') {
+        const v = ventaById[d.refId]; const l = v && v.lineas.find(x => x.codigo === d.codigo);
+        if (!l) { R.errors.push('Devolución sin venta de origen (id ' + d.id + ')'); return; }
+        const frac = d.cant / l.cant;
+        const base = r2(l.base * frac), total = r2(l.total * frac);
+        const dv = { ...d, v, l, base, total, itbis: r2(total - base), cost: 0 };
+        R.devs.push(dv); ev.push({ k: 'devventa', date: d.fecha, pri: 3, id: d.id, d: dv });
+      } else {
+        const c = compraById[d.refId]; const l = c && c.lineas.find(x => x.codigo === d.codigo);
+        if (!l) { R.errors.push('Devolución sin compra de origen (id ' + d.id + ')'); return; }
+        const frac = d.cant / l.cant;
+        const base = r2(l.base * frac), total = r2(l.total * frac);
+        const dv = { ...d, c, l, base, total, itbis: r2(total - base) };
+        R.devs.push(dv); ev.push({ k: 'devcompra', date: d.fecha, pri: 4, id: d.id, d: dv });
+      }
+    });
+    R.ajs = S.ajustes.map(a => ({ ...a, cost: 0 }));
+    R.ajs.forEach(a => ev.push({ k: 'ajuste', date: a.fecha, pri: 5, id: a.id, a }));
+    ev.sort((x, y) => x.date < y.date ? -1 : x.date > y.date ? 1 : (x.pri - y.pri) || (x.id - y.id));
+
+    const st = {};
+    S.productos.forEach(p => { st[p.codigo] = { q: 0, v: 0, last: costoBase(p) }; R.K[p.codigo] = []; });
+    const snap = (code, e, tipo, dq, dv) => {
+      const s = st[code];
+      if (s.q > 1e-9) s.last = s.v / s.q;
+      R.K[code].push({ date: e.date, tipo, id: e.id, dq, dv, q: s.q, v: s.v });
+    };
+    const salida = (code, qty) => {
+      const s = st[code];
+      const avg = s.q > 1e-9 ? s.v / s.q : s.last;
+      const cost = (s.q > 1e-9 && Math.abs(qty - s.q) < 1e-9) ? r2(s.v) : r2(qty * avg);
+      s.q -= qty; s.v -= cost;
+      return cost;
+    };
+    ev.forEach(e => {
+      if (e.k === 'ini') {
+        const p = e.p, s = st[p.codigo]; const q = Number(p.existencia) || 0;
+        s.q = q; s.v = r2(q * costoBase(p)); snap(p.codigo, e, 'ini', q, s.v);
+      } else if (e.k === 'compra') {
+        if (!st[e.l.codigo]) { R.errors.push('Compra con producto inexistente ' + e.l.codigo); return; }
+        const s = st[e.l.codigo]; s.q += e.l.cant; s.v += e.l.base;
+        snap(e.l.codigo, e, 'compra', e.l.cant, e.l.base);
+        R.itbisEv.push({ date: e.date, delta: -e.l.itbis, id: e.id });
+      } else if (e.k === 'venta') {
+        if (!st[e.l.codigo]) { R.errors.push('Venta con producto inexistente ' + e.l.codigo); return; }
+        const cost = salida(e.l.codigo, e.l.cant); e.l.cost = cost;
+        snap(e.l.codigo, e, 'venta', -e.l.cant, -cost);
+        R.itbisEv.push({ date: e.date, delta: e.l.itbis, id: e.id });
+      } else if (e.k === 'devventa') {
+        const d = e.d, s = st[d.codigo]; const frac = d.cant / d.l.cant;
+        d.cost = r2(d.l.cost * frac);
+        s.q += d.cant; s.v += d.cost;
+        snap(d.codigo, e, 'devventa', d.cant, d.cost);
+        R.itbisEv.push({ date: e.date, delta: -d.itbis, id: e.id });
+      } else if (e.k === 'devcompra') {
+        const d = e.d, s = st[d.codigo];
+        s.q -= d.cant; s.v -= d.base;
+        snap(d.codigo, e, 'devcompra', -d.cant, -d.base);
+        R.itbisEv.push({ date: e.date, delta: d.itbis, id: e.id });
+      } else if (e.k === 'ajuste') {
+        const a = e.a; if (!st[a.codigo]) { R.errors.push('Ajuste con producto inexistente ' + a.codigo); return; }
+        const s = st[a.codigo];
+        if (a.cant < 0) {
+          const cost = salida(a.codigo, -a.cant); a.cost = cost; a.loss = cost;
+          snap(a.codigo, e, a.tipo === 'Ajuste por conteo' ? 'ajuste' : 'merma', a.cant, -cost);
+        } else {
+          const avg = s.q > 1e-9 ? s.v / s.q : s.last; const val = r2(a.cant * avg);
+          s.q += a.cant; s.v += val; a.cost = val; a.loss = -val;
+          snap(a.codigo, e, 'ajuste', a.cant, val);
+        }
+      }
+    });
+    R.st = st;
+
+    /* --- cuentas por pagar / por cobrar (documentos) --- */
+    R.cxp = [];
+    R.compras.forEach(c => { if (c.forma === 'Crédito') R.cxp.push({ key: 'C' + c.id, tipo: 'compra', compraId: c.id, suplidor: c.suplidor, factura: c.factura, fecha: c.fecha, vencimiento: c.vencimiento, total: c.total }); });
+    S.cxpIni.forEach(x => R.cxp.push({ key: 'SI' + x.id, tipo: 'saldo inicial', suplidor: x.suplidor, factura: x.factura, fecha: x.fecha, vencimiento: x.vencimiento, total: x.monto }));
+    R.cxc = [];
+    R.ventas.forEach(v => { if (v.forma === 'Crédito') R.cxc.push({ key: 'V' + v.id, tipo: 'venta', ventaId: v.id, cliente: v.cliente, operacion: v.operacion, fecha: v.fecha, vencimiento: v.vencimiento, total: v.total }); });
+    S.cxcIni.forEach(x => R.cxc.push({ key: 'CI' + x.id, tipo: 'saldo inicial', cliente: x.cliente, operacion: x.operacion, fecha: x.fecha, vencimiento: x.vencimiento, total: x.monto }));
+
+    /* --- libro de caja y bancos --- */
+    const L = R.ledger; let ord = 0;
+    const add = (date, concepto, ent, sal, tipo, medio, ref) => {
+      if (!ent && !sal) return;
+      L.push({ date, concepto, entrada: r2(ent || 0), salida: r2(sal || 0), tipo, medio, cuenta: medio === 'Efectivo' ? 'Caja' : 'Banco', ref: ref || '', o: ord++ });
+    };
+    add(BEGIN, 'Saldo inicial de caja', cfg.cajaInicial, 0, 'Saldo inicial', 'Efectivo');
+    add(BEGIN, 'Saldo inicial de banco', cfg.bancoInicial, 0, 'Saldo inicial', 'Banco');
+    R.ventas.forEach(v => { if (v.forma !== 'Crédito') add(v.fecha, 'Venta ' + v.operacion + (v.cliente ? ' · ' + v.cliente : ''), v.total, 0, 'Venta', v.forma === 'Efectivo' ? 'Efectivo' : 'Banco', 'V' + v.id); });
+    R.compras.forEach(c => { if (c.forma === 'Contado') add(c.fecha, 'Compra factura ' + c.factura + ' · ' + c.suplidor, 0, c.total, 'Compra', c.medio || 'Efectivo', 'C' + c.id); });
+    S.cobros.forEach(c => { const d = R.cxc.find(x => x.key === c.docKey); add(c.fecha, 'Cobro ' + (d ? d.cliente + ' · ' + d.operacion : ''), c.monto, 0, 'Cobro', c.medio, c.docKey); });
+    S.pagos.forEach(p => { const d = R.cxp.find(x => x.key === p.docKey); add(p.fecha, 'Pago ' + (d ? d.suplidor + ' · fact. ' + d.factura : ''), 0, p.monto, 'Pago a suplidor', p.medio, p.docKey); });
+    R.devs.forEach(d => {
+      if (d.destino === 'Deuda') return;
+      if (d.tipo === 'venta') add(d.fecha, 'Devolución de venta ' + d.v.operacion, 0, d.total, 'Devolución de venta', d.destino);
+      else add(d.fecha, 'Devolución de compra fact. ' + d.c.factura, d.total, 0, 'Devolución de compra', d.destino);
+    });
+    S.gastos.forEach(g => add(g.fecha, g.concepto + ' (' + g.categoria + ')', 0, g.monto, 'Gasto', g.medio));
+    const MOV = {
+      aporte: ['Aporte del dueño', 1], retiro: ['Retiro del dueño', -1], prestamo: ['Préstamo recibido', 1],
+      pago_prestamo: ['Pago de préstamo', -1], otro_ingreso: ['Otro ingreso', 1], otro_gasto: ['Otro gasto', -1], pago_itbis: ['Pago de ITBIS', -1],
+    };
+    S.movimientos.forEach(m => {
+      const medio = m.cuenta === 'Caja' ? 'Efectivo' : 'Banco';
+      if (m.tipo === 'deposito') { add(m.fecha, m.concepto || 'Depósito a banco', 0, m.monto, 'Depósito a banco', 'Efectivo'); add(m.fecha, m.concepto || 'Depósito a banco', m.monto, 0, 'Depósito a banco', 'Banco'); }
+      else if (m.tipo === 'retiro_banco') { add(m.fecha, m.concepto || 'Retiro de banco', 0, m.monto, 'Retiro de banco', 'Banco'); add(m.fecha, m.concepto || 'Retiro de banco', m.monto, 0, 'Retiro de banco', 'Efectivo'); }
+      else { const [t, s] = MOV[m.tipo]; add(m.fecha, m.concepto || t, s > 0 ? m.monto : 0, s < 0 ? m.monto : 0, t, medio); }
+      if (m.tipo === 'pago_itbis') R.itbisEv.push({ date: m.fecha, delta: -m.monto, id: m.id });
+    });
+    L.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : a.o - b.o);
+
+    R.inv0 = sum(S.productos, p => R.K[p.codigo][0] ? R.K[p.codigo][0].v : 0);
+    return R;
+  }
+
+  /* ---------- consultas ---------- */
+  function invAt(R, code, date, strict) {
+    const arr = R.K[code] || []; let q = 0, v = 0;
+    for (const s of arr) { if (strict ? s.date < date : s.date <= date) { q = s.q; v = s.v; } else break; }
+    return { q, v };
+  }
+  const invTotal = (R, date, strict) => r2(Object.keys(R.K).reduce((a, c) => a + invAt(R, c, date, strict).v, 0));
+  const avgCost = (R, code, date) => {
+    const s = invAt(R, code, date || END); const p = R.P[code];
+    if (s.q > 1e-9) return s.v / s.q;
+    return R.st[code] ? R.st[code].last : (p ? p.costo : 0);
+  };
+  const ledgerBal = (R, cuenta, end) => r2(R.ledger.reduce((a, e) => (e.date <= end && (!cuenta || e.cuenta === cuenta)) ? a + e.entrada - e.salida : a, 0));
+
+  function docSaldo(S, R, doc, tipo, asOf) {
+    if (doc.fecha > asOf) return { saldo: 0, abonos: 0, vigente: false };
+    let abonos;
+    if (tipo === 'cxp') {
+      abonos = sum(S.pagos.filter(p => p.docKey === doc.key && p.fecha <= asOf), p => p.monto)
+        + (doc.compraId ? sum(R.devs.filter(d => d.tipo === 'compra' && d.destino === 'Deuda' && d.refId === doc.compraId && d.fecha <= asOf), d => d.total) : 0);
+    } else {
+      abonos = sum(S.cobros.filter(p => p.docKey === doc.key && p.fecha <= asOf), p => p.monto)
+        + (doc.ventaId ? sum(R.devs.filter(d => d.tipo === 'venta' && d.destino === 'Deuda' && d.refId === doc.ventaId && d.fecha <= asOf), d => d.total) : 0);
+    }
+    abonos = r2(abonos);
+    return { saldo: r2(doc.total - abonos), abonos, vigente: true };
+  }
+  function docsAt(S, R, tipo, asOf, hoy) {
+    const list = tipo === 'cxp' ? R.cxp : R.cxc;
+    return list.map(d => {
+      const s = docSaldo(S, R, d, tipo, asOf);
+      let estado = 'Pendiente';
+      if (s.saldo <= 0.005) estado = 'Pagada';
+      else if (d.vencimiento && d.vencimiento < hoy) estado = 'Vencida';
+      else if (s.abonos > 0) estado = 'Abonada';
+      return { ...d, ...s, estado, dias: d.vencimiento ? diffDays(d.vencimiento, hoy) : null };
+    }).filter(d => d.vigente);
+  }
+  const itbisBalance = (R, end) => r2(R.itbisEv.reduce((a, e) => e.date <= end ? a + e.delta : a, 0));
+
+  /* ---------- Estado de resultados ---------- */
+  function resultados(S, R, start, end) {
+    const inR = d => d >= start && d <= end;
+    const vs = R.ventas.filter(v => inR(v.fecha));
+    const cs = R.compras.filter(c => inR(c.fecha));
+    const dvs = R.devs.filter(d => d.tipo === 'venta' && inR(d.fecha));
+    const dcs = R.devs.filter(d => d.tipo === 'compra' && inR(d.fecha));
+    const ventasBrutas = r2(sum(vs, v => sum(v.lineas, l => l.gB)));
+    const descVentas = r2(sum(vs, v => sum(v.lineas, l => l.dB)));
+    const devVentas = r2(sum(dvs, d => d.base));
+    const ventasNetas = r2(ventasBrutas - descVentas - devVentas);
+    const comprasBrutas = r2(sum(cs, c => sum(c.lineas, l => l.gB)));
+    const descCompras = r2(sum(cs, c => sum(c.lineas, l => l.dB)));
+    const adicionales = r2(sum(cs, c => sum(c.lineas, l => l.aB)));
+    const devCompras = r2(sum(dcs, d => d.base));
+    const comprasNetas = r2(comprasBrutas - descCompras + adicionales - devCompras);
+    // Si el período empieza desde el origen, el inventario inicial es el cargado en el catálogo de productos
+    const invIni = start <= BEGIN ? R.inv0 : invTotal(R, start, true), invFin = invTotal(R, end, false);
+    const costoVentas = r2(invIni + comprasNetas - invFin);
+    // control por movimiento: costo vendido + pérdidas y ajustes
+    const cmvVendido = r2(sum(vs, v => sum(v.lineas, l => l.cost)) - sum(dvs, d => d.cost));
+    const ajs = R.ajs.filter(a => inR(a.fecha));
+    const perdidas = r2(sum(ajs.filter(a => a.tipo !== 'Ajuste por conteo' && a.cant < 0), a => a.loss));
+    const ajConteo = r2(sum(ajs.filter(a => !(a.tipo !== 'Ajuste por conteo' && a.cant < 0)), a => a.loss));
+    const costoDirecto = r2(cmvVendido + perdidas + ajConteo);
+    const beneficioBruto = r2(ventasNetas - costoVentas);
+    const gs = S.gastos.filter(g => inR(g.fecha));
+    const porCat = {}; gs.forEach(g => { porCat[g.categoria] = r2((porCat[g.categoria] || 0) + g.monto); });
+    const gastosOp = r2(sum(gs, g => g.monto));
+    const gastosFijos = r2(sum(gs.filter(g => g.tipo === 'Fijo'), g => g.monto));
+    const gastosVariables = r2(gastosOp - gastosFijos);
+    const resultadoOp = r2(beneficioBruto - gastosOp);
+    const ms = S.movimientos.filter(m => inR(m.fecha));
+    const otrosIngresos = r2(sum(ms.filter(m => m.tipo === 'otro_ingreso'), m => m.monto));
+    const og = ms.filter(m => m.tipo === 'otro_gasto');
+    const impuestos = r2(sum(og.filter(m => m.categoria === 'Impuestos'), m => m.monto));
+    const otrosGastos = r2(sum(og, m => m.monto) - impuestos);
+    const resultadoNeto = r2(resultadoOp + otrosIngresos - otrosGastos - impuestos);
+    return {
+      start, end, ventasBrutas, descVentas, devVentas, ventasNetas, comprasBrutas, descCompras, adicionales, devCompras, comprasNetas,
+      invIni, invFin, costoVentas, cmvVendido, perdidas, ajConteo, costoDirecto, difControl: r2(costoVentas - costoDirecto),
+      beneficioBruto, margenBruto: ventasNetas ? beneficioBruto / ventasNetas : 0, porCat, gastosOp, gastosFijos, gastosVariables,
+      resultadoOp, otrosIngresos, otrosGastos, impuestos, resultadoNeto,
+    };
+  }
+
+  /* ---------- Balance (situación financiera) ---------- */
+  function balance(S, R, end, hoy) {
+    const cfg = S.config;
+    const caja = ledgerBal(R, 'Caja', end), banco = ledgerBal(R, 'Banco', end);
+    const cxc = r2(sum(docsAt(S, R, 'cxc', end, hoy), d => d.saldo));
+    const cxp = r2(sum(docsAt(S, R, 'cxp', end, hoy), d => d.saldo));
+    const inventario = invTotal(R, end, false);
+    const equipos = Number(cfg.equipos) || 0;
+    const itb = itbisBalance(R, end);
+    const itbisFavor = itb < 0 ? r2(-itb) : 0, itbisPagar = itb > 0 ? itb : 0;
+    const prestamos = r2(sum(S.movimientos.filter(m => m.fecha <= end && m.tipo === 'prestamo'), m => m.monto) - sum(S.movimientos.filter(m => m.fecha <= end && m.tipo === 'pago_prestamo'), m => m.monto));
+    const activos = r2(caja + banco + cxc + inventario + equipos + itbisFavor);
+    const pasivos = r2(cxp + prestamos + itbisPagar);
+    const capitalInicial = r2((Number(cfg.cajaInicial) || 0) + (Number(cfg.bancoInicial) || 0) + R.inv0 + equipos + sum(S.cxcIni, x => x.monto) - sum(S.cxpIni, x => x.monto));
+    const aportes = r2(sum(S.movimientos.filter(m => m.fecha <= end && m.tipo === 'aporte'), m => m.monto));
+    const retiros = r2(sum(S.movimientos.filter(m => m.fecha <= end && m.tipo === 'retiro'), m => m.monto));
+    const utilidadAcum = resultados(S, R, BEGIN, end).resultadoNeto;
+    const patrimonio = r2(capitalInicial + aportes - retiros + utilidadAcum);
+    return { end, caja, banco, cxc, inventario, equipos, itbisFavor, activos, cxp, prestamos, itbisPagar, pasivos, capitalInicial, aportes, retiros, utilidadAcum, patrimonio, diferencia: r2(activos - pasivos - patrimonio), cuadra: Math.abs(activos - pasivos - patrimonio) < 0.05 };
+  }
+
+  /* ---------- Control de inventario por período ---------- */
+  function inventarioResumen(S, R, start, end) {
+    return S.productos.map(p => {
+      const arr = R.K[p.codigo];
+      const inR = e => e.date >= start && e.date <= end && e.tipo !== 'ini';
+      const evs = arr.filter(inR);
+      const qIni = invAt(R, p.codigo, start, true).q;
+      const entradas = sum(evs.filter(e => e.tipo === 'compra'), e => e.dq);
+      const salidas = -sum(evs.filter(e => e.tipo === 'venta'), e => e.dq);
+      const devoluciones = sum(evs.filter(e => e.tipo === 'devventa' || e.tipo === 'devcompra'), e => e.dq);
+      const ajustes = sum(evs.filter(e => e.tipo === 'ajuste'), e => e.dq);
+      const perdidas = sum(evs.filter(e => e.tipo === 'merma'), e => e.dq);
+      const fin = invAt(R, p.codigo, end);
+      const costoU = fin.q > 1e-9 ? fin.v / fin.q : avgCost(R, p.codigo, end);
+      return { codigo: p.codigo, nombre: p.nombre, categoria: p.categoria, unidad: p.unidad, qIni, entradas, salidas, devoluciones, ajustes, perdidas, existencia: fin.q, costoU, valor: fin.v, minimo: p.minimo || 0, vence: p.vence || '', estado: p.estado };
+    });
+  }
+
+  /* ---------- Series para gráficos ---------- */
+  function seriesDiarias(S, R, start, end, which) {
+    const days = diffDays(end, start) + 1;
+    const mensual = days > 62;
+    const key = d => mensual ? d.slice(0, 7) : d;
+    const map = {};
+    const put = (d, v) => { if (d < start || d > end) return; const k = key(d); map[k] = r2((map[k] || 0) + v); };
+    if (which === 'ventas') { R.ventas.forEach(v => put(v.fecha, v.base)); R.devs.filter(d => d.tipo === 'venta').forEach(d => put(d.fecha, -d.base)); }
+    if (which === 'compras') { R.compras.forEach(c => put(c.fecha, c.base)); R.devs.filter(d => d.tipo === 'compra').forEach(d => put(d.fecha, -d.base)); }
+    // completar días/meses sin movimiento
+    const out = []; const cur = new Set(Object.keys(map));
+    if (mensual) {
+      let m = start.slice(0, 7); const last = end.slice(0, 7);
+      while (m <= last) { out.push({ k: m, label: m.slice(5) + '/' + m.slice(2, 4), v: map[m] || 0 }); const [y, mm] = m.split('-').map(Number); m = mm === 12 ? (y + 1) + '-01' : y + '-' + pad(mm + 1); }
+    } else {
+      let d = start; while (d <= end) { out.push({ k: d, label: d.slice(8), v: map[d] || 0 }); d = addDays(d, 1); }
+    }
+    return out;
+  }
+  function topProductos(S, R, start, end, n) {
+    const m = {};
+    R.ventas.filter(v => v.fecha >= start && v.fecha <= end).forEach(v => v.lineas.forEach(l => {
+      const o = m[l.codigo] || (m[l.codigo] = { codigo: l.codigo, nombre: (R.P[l.codigo] || {}).nombre || l.codigo, unidades: 0, ventas: 0, costo: 0 });
+      o.unidades += l.cant; o.ventas += l.base; o.costo += l.cost;
+    }));
+    R.devs.filter(d => d.tipo === 'venta' && d.fecha >= start && d.fecha <= end).forEach(d => {
+      const o = m[d.codigo]; if (o) { o.unidades -= d.cant; o.ventas -= d.base; o.costo -= d.cost; }
+    });
+    return Object.values(m).map(o => ({ ...o, ventas: r2(o.ventas), costo: r2(o.costo), ganancia: r2(o.ventas - o.costo), margen: o.ventas ? (o.ventas - o.costo) / o.ventas : 0 }))
+      .sort((a, b) => b.unidades - a.unidades).slice(0, n || 8);
+  }
+  function evolucionUtilidad(S, R, end, nMeses) {
+    const out = []; let m = end.slice(0, 7);
+    const list = [];
+    for (let i = 0; i < nMeses; i++) { list.unshift(m); const [y, mm] = m.split('-').map(Number); m = mm === 1 ? (y - 1) + '-12' : y + '-' + pad(mm - 1); }
+    list.forEach(mm => { const s = mm + '-01', e = monthEnd(s); out.push({ k: mm, label: mm.slice(5) + '/' + mm.slice(2, 4), v: resultados(S, R, s, e).resultadoNeto }); });
+    return out;
+  }
+
+  /* ---------- Cierre de caja ---------- */
+  function cierreInfo(S, R, fecha) {
+    const apertura = ledgerBal(R, 'Caja', addDays(fecha, -1));
+    const dia = R.ledger.filter(e => e.date === fecha && e.cuenta === 'Caja');
+    const por = {}; dia.forEach(e => { const k = e.tipo; por[k] = r2((por[k] || 0) + e.entrada - e.salida); });
+    const esperado = ledgerBal(R, 'Caja', fecha);
+    return { apertura, por, esperado };
+  }
+
+  /* ---------- Alertas ---------- */
+  function alertas(S, R, hoy) {
+    const cfg = S.config, out = [];
+    const act = S.productos.filter(p => p.estado !== 'Inactivo');
+    const inv = inventarioResumen(S, R, BEGIN, END).filter(x => x.estado !== 'Inactivo');
+    const bajos = inv.filter(x => x.existencia > 1e-9 && x.minimo > 0 && x.existencia <= x.minimo);
+    const agot = inv.filter(x => x.existencia <= 1e-9 && x.existencia >= -1e-9);
+    const neg = inv.filter(x => x.existencia < -1e-9);
+    const venc = inv.filter(x => x.vence && x.existencia > 1e-9 && x.vence < hoy);
+    const prox = inv.filter(x => x.vence && x.existencia > 1e-9 && x.vence >= hoy && diffDays(x.vence, hoy) <= cfg.diasAlertaVence);
+    const margNeg = act.map(p => {
+      const rate = R.rateOf(p.codigo); const pb = (rate && R.incl) ? p.precio / (1 + rate) : p.precio; const c = avgCost(R, p.codigo);
+      return { p, pb, c };
+    }).filter(x => x.pb > 0 && x.c > 0 && x.pb < x.c - 1e-9);
+    const cxp = docsAt(S, R, 'cxp', END, hoy).filter(d => d.saldo > 0.005);
+    const cxpV = cxp.filter(d => d.vencimiento && d.vencimiento < hoy);
+    const cxpP = cxp.filter(d => d.vencimiento && d.vencimiento >= hoy && diffDays(d.vencimiento, hoy) <= cfg.diasAlertaPago);
+    const cxcV = docsAt(S, R, 'cxc', END, hoy).filter(d => d.saldo > 0.005 && d.vencimiento && d.vencimiento < hoy);
+    const desc = S.cierres.filter(c => Math.abs(c.diferencia) >= 0.005).sort((a, b) => b.fecha.localeCompare(a.fecha));
+    const dif = R.ajs.filter(a => a.tipo === 'Ajuste por conteo' && a.cant < 0).sort((a, b) => b.fecha.localeCompare(a.fecha));
+    const desde = addDays(hoy, -30);
+    const perd = R.ajs.filter(a => a.fecha >= desde && a.loss > 0 && a.cant < 0);
+    const dup = []; const seen = {};
+    S.pagos.forEach(p => { const k = p.docKey + '|' + p.monto + '|' + p.fecha; if (seen[k]) dup.push(p); seen[k] = 1; });
+
+    if (neg.length) out.push({ nivel: 'alta', titulo: 'Existencia negativa', cant: neg.length, detalle: neg.map(x => x.nombre + ' (' + x.existencia + ')'), revisar: 'No puedes tener menos de cero. Revisa si vendiste algo que no habías registrado como compra, o si un registro de compra tiene fecha posterior a la venta.' });
+    if (agot.length) out.push({ nivel: 'alta', titulo: 'Productos agotados', cant: agot.length, detalle: agot.map(x => x.nombre), revisar: 'Decide si los repones. Mira cuánto se vendían en el último mes antes de pedir.' });
+    if (bajos.length) out.push({ nivel: 'media', titulo: 'Productos por debajo del mínimo', cant: bajos.length, detalle: bajos.map(x => x.nombre + ': ' + x.existencia + ' (mín. ' + x.minimo + ')'), revisar: 'Prepara el pedido al suplidor habitual. Si siempre llegan a este nivel, sube la existencia mínima.' });
+    if (venc.length) out.push({ nivel: 'alta', titulo: 'Productos vencidos con existencia', cant: venc.length, detalle: venc.map(x => x.nombre + ' · venció ' + x.vence), revisar: 'Sácalos de la venta y regístralos como "Vencido" en Ajustes y pérdidas, para que salgan del inventario.' });
+    if (prox.length) out.push({ nivel: 'media', titulo: 'Productos próximos a vencer', cant: prox.length, detalle: prox.map(x => x.nombre + ' · vence ' + x.vence), revisar: 'Ponlos al frente, haz una oferta o devuélvelos al suplidor antes de que se pierdan.' });
+    if (margNeg.length) out.push({ nivel: 'alta', titulo: 'Productos con margen negativo', cant: margNeg.length, detalle: margNeg.map(x => x.p.nombre + ': costo ' + r2(x.c) + ' > precio ' + r2(x.pb)), revisar: 'Estás vendiendo por debajo del costo. Revisa el precio de venta o el costo de la última compra.' });
+    if (cxpV.length) out.push({ nivel: 'alta', titulo: 'Facturas de suplidores vencidas', cant: cxpV.length, detalle: cxpV.map(d => d.suplidor + ' · fact. ' + d.factura + ' · saldo ' + d.saldo + ' · venció ' + d.vencimiento), revisar: 'Comunícate con el suplidor y programa el pago o un abono.' });
+    if (cxpP.length) out.push({ nivel: 'media', titulo: 'Facturas próximas a vencer', cant: cxpP.length, detalle: cxpP.map(d => d.suplidor + ' · fact. ' + d.factura + ' · saldo ' + d.saldo + ' · vence ' + d.vencimiento), revisar: 'Separa el dinero para estas facturas.' });
+    if (cxcV.length) out.push({ nivel: 'media', titulo: 'Cuentas por cobrar vencidas', cant: cxcV.length, detalle: cxcV.map(d => d.cliente + ' · ' + d.operacion + ' · saldo ' + d.saldo), revisar: 'Contacta al cliente para cobrar. Antes de volver a fiarle, revisa su balance.' });
+    if (dif.length) out.push({ nivel: 'media', titulo: 'Diferencias de inventario (conteo físico)', cant: dif.length, detalle: dif.slice(0, 10).map(a => a.fecha + ' · ' + ((R.P[a.codigo] || {}).nombre || a.codigo) + ' · ' + a.cant), revisar: 'Investiga si hubo ventas sin anotar, consumo propio, robo o errores de conteo.' });
+    if (perd.length) out.push({ nivel: 'media', titulo: 'Posibles pérdidas de mercancía (últimos 30 días)', cant: perd.length, detalle: ['Valor aproximado: ' + r2(sum(perd, a => a.loss)) + ' (' + perd.length + ' registros)'], revisar: 'Mira qué productos se dañan o se vencen más y ajusta tus compras.' });
+    if (desc.length) out.push({ nivel: 'alta', titulo: 'Descuadres de caja', cant: desc.length, detalle: desc.slice(0, 10).map(c => c.fecha + ' · ' + (c.diferencia < 0 ? 'faltante ' : 'sobrante ') + Math.abs(c.diferencia)), revisar: 'Revisa los cobros, cambios mal dados, gastos o retiros sin anotar de ese día.' });
+    if (dup.length) out.push({ nivel: 'alta', titulo: 'Posibles pagos duplicados', cant: dup.length, detalle: dup.map(p => p.fecha + ' · ' + p.monto), revisar: 'Hay pagos del mismo monto, fecha y factura. Confirma que no pagaste dos veces.' });
+    if (R.errors.length) out.push({ nivel: 'alta', titulo: 'Registros con problemas', cant: R.errors.length, detalle: R.errors, revisar: 'Corrige o elimina estos registros.' });
+    return out;
+  }
+
+  /* ---------- Validaciones al guardar ---------- */
+  function negSummary(R) {
+    const m = {};
+    Object.keys(R.K).forEach(code => { R.K[code].forEach(s => { if (s.q < -1e-9) m[code] = Math.min(m[code] === undefined ? 0 : m[code], s.q); }); });
+    return m;
+  }
+  function newNegatives(before, after) {
+    const out = [];
+    Object.keys(after).forEach(c => { if (before[c] === undefined || after[c] < before[c] - 1e-9) out.push({ codigo: c, q: after[c] }); });
+    return out;
+  }
+  function nextOperacion(S) {
+    let max = 0; S.ventas.forEach(v => { const n = parseInt(String(v.operacion).replace(/\D/g, ''), 10); if (n > max) max = n; });
+    return 'V-' + String(max + 1).padStart(4, '0');
+  }
+
+  return {
+    r2, todayStr, addDays, diffDays, monthStart, monthEnd, BEGIN, END, parseD, pad,
+    emptyState, nextId, compute, invAt, invTotal, avgCost, ledgerBal, docsAt, docSaldo, itbisBalance, resultados, balance,
+    inventarioResumen, seriesDiarias, topProductos, evolucionUtilidad, cierreInfo, alertas, negSummary, newNegatives, nextOperacion, mk,
+  };
+})();
+
+/* Datos de demostración (ficticios). El caso práctico oficial se desarrolla en la Fase 5. */
+function buildDemo() {
+  const S = MNI.emptyState();
+  const hoy = MNI.todayStr();
+  const [y, m] = hoy.split('-').map(Number);
+  const pm = m === 1 ? 12 : m - 1, py = m === 1 ? y - 1 : y;
+  const K = 3; // factor de escala de volumen
+  const first = py + '-' + MNI.pad(pm) + '-01', last = MNI.monthEnd(first);
+  const nDays = MNI.diffDays(last, first) + 1;
+  const D = n => MNI.addDays(first, n - 1);
+  let seed = 20260;
+  const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+  const ri = (a, b) => Math.floor(rnd() * (b - a + 1)) + a;
+
+  S.config.negocio = 'Colmado La Alegría (demostración)';
+  S.config.propietario = 'Rafael Martínez (ficticio)';
+  S.config.fechaInicio = first;
+  S.config.cajaInicial = 25000; S.config.bancoInicial = 60000; S.config.equipos = 40000;
+
+  const sup = [
+    ['Distribuidora Cibao', '1-30-12345-6', '809-555-0101', 'Luis Peña', 'Av. Duarte 120, Santiago', 30],
+    ['Almacén El Progreso', '1-31-23456-7', '809-555-0102', 'Marta Díaz', 'C/ Las Flores 45, Santo Domingo', 15],
+    ['Bebidas del Caribe', '1-01-34567-8', '809-555-0103', 'Pedro Ramos', 'Autopista Duarte Km 12', 15],
+  ];
+  sup.forEach(s => S.suplidores.push({ id: MNI.nextId(S), nombre: s[0], rnc: s[1], telefono: s[2], contacto: s[3], direccion: s[4], dias: s[5] }));
+
+  // codigo, nombre, cat, unidad, suplidor, existencia, costo, precio, minimo, vence
+  const prods = [
+    ['ARR01', 'Arroz selecto', 'Granos y cereales', 'Libra', 0, 400, 32, 38, 150],
+    ['ACE01', 'Aceite vegetal 1 L', 'Aceites y grasas', 'Botella', 0, 40, 175, 225, 15],
+    ['AZU01', 'Azúcar crema', 'Granos y cereales', 'Libra', 0, 150, 30, 38, 60],
+    ['HAB01', 'Habichuelas rojas', 'Granos y cereales', 'Libra', 0, 120, 62, 75, 50],
+    ['LEC01', 'Leche en polvo', 'Lácteos y huevos', 'Funda', 1, 24, 120, 160, 10, 'LECHE'],
+    ['HUE01', 'Huevos', 'Lácteos y huevos', 'Unidad', 1, 600, 6.5, 6, 240],
+    ['REF01', 'Refresco 2 L', 'Bebidas', 'Botella', 2, 120, 85, 110, 60],
+    ['AGU01', 'Agua 500 ml', 'Bebidas', 'Botella', 2, 240, 9, 15, 120],
+    ['SAR01', 'Sardinas enlatadas', 'Enlatados', 'Lata', 0, 60, 35, 48, 30],
+    ['SAL01', 'Salsa de tomate', 'Enlatados', 'Lata', 0, 80, 22, 32, 40],
+    ['SPA01', 'Espagueti', 'Granos y cereales', 'Funda', 0, 90, 28, 40, 40],
+    ['JAB01', 'Jabón de cuaba', 'Limpieza', 'Unidad', 0, 50, 18, 28, 20],
+  ];
+  prods.forEach(p => {
+    S.productos.push({
+      codigo: p[0], nombre: p[1], categoria: p[2], unidad: p[3], suplidor: sup[p[4]][0], existencia: p[5] * K, costo: p[6], precio: p[7], minimo: p[8] * K,
+      vence: p[0] === 'LEC01' ? MNI.addDays(hoy, 14) : (p[0] === 'SAR01' ? MNI.addDays(hoy, -5) : ''), estado: 'Activo', itbis: 'general',
+    });
+  });
+  const P = {}; S.productos.forEach(p => { P[p.codigo] = p; });
+  const stock = {}; S.productos.forEach(p => { stock[p.codigo] = p.existencia; });
+
+  // Compras (ordenadas por fecha)
+  const compraDefs = [
+    { d: 3, s: 0, f: 'CIB-1041', forma: 'Crédito', lines: [['ARR01', 600, 33, 0, 0], ['AZU01', 200, 31, 0, 0], ['HAB01', 150, 63, 0, 0], ['SPA01', 80, 28, 0, 0]], flete: 600 },
+    { d: 5, s: 2, f: 'BDC-778', forma: 'Contado', medio: 'Efectivo', lines: [['REF01', 120, 86, 400, 0], ['AGU01', 300, 9, 0, 0]] },
+    { d: 10, s: 1, f: 'ELP-2205', forma: 'Crédito', lines: [['LEC01', 20, 122, 0, 0], ['HUE01', 900, 6.6, 0, 0]] },
+    { d: 12, s: 0, f: 'CIB-1060', forma: 'Contado', medio: 'Banco', lines: [['ACE01', 24, 180, 0, 0], ['SAR01', 60, 35, 0, 0], ['SAL01', 60, 22, 0, 0]] },
+    { d: 19, s: 2, f: 'BDC-802', forma: 'Crédito', lines: [['REF01', 144, 86, 0, 0], ['AGU01', 240, 9, 0, 0]] },
+    { d: 24, s: 0, f: 'CIB-1085', forma: 'Crédito', lines: [['ACE01', 36, 190, 342, 180], ['ARR01', 400, 34, 0, 0], ['JAB01', 60, 18, 0, 0]] },
+  ];
+  const compraMap = {};
+  compraDefs.forEach(c => {
+    const id = MNI.nextId(S);
+    const fecha = D(c.d);
+    const o = { id, fecha, factura: c.f, suplidor: sup[c.s][0], forma: c.forma, medio: c.medio || '', vencimiento: c.forma === 'Crédito' ? MNI.addDays(fecha, sup[c.s][5]) : '',
+      lineas: c.lines.map((l, i) => ({ codigo: l[0], cant: l[1] * K, costo: l[2], descuento: l[3], adicional: i === 0 && c.flete ? c.flete : l[4] })) };
+    S.compras.push(o); compraMap[c.d] = o;
+  });
+
+  // Ventas diarias
+  const weights = { ARR01: [20, 60], ACE01: [2, 6], AZU01: [10, 30], HAB01: [6, 20], LEC01: [1, 3], HUE01: [30, 90], REF01: [4, 12], AGU01: [8, 20], SAR01: [2, 6], SAL01: [3, 8], SPA01: [3, 8], JAB01: [1, 4] };
+  const clientes = ['Doña Carmen', 'Don Julio', 'Yesenia Pérez', 'Colmado vecino', 'Familia Rodríguez'];
+  let opn = 1; const ventasCred = [];
+  const comprasPorDia = {}; S.compras.forEach(c => { comprasPorDia[MNI.diffDays(c.fecha, first) + 1] = c; });
+  for (let d = 1; d <= nDays; d++) {
+    if (comprasPorDia[d]) comprasPorDia[d].lineas.forEach(l => { stock[l.codigo] += l.cant; });
+    const nv = ri(2, 3);
+    for (let k = 0; k < nv; k++) {
+      const lines = []; const used = {};
+      const n = ri(3, 5);
+      for (let j = 0; j < n; j++) {
+        const code = prods[ri(0, prods.length - 1)][0]; if (used[code]) continue; used[code] = 1;
+        const [a, b] = weights[code]; let q = ri(a, b) * K; q = Math.min(q, Math.floor(stock[code] * 0.5)); if (q < 1) continue;
+        stock[code] -= q; lines.push({ codigo: code, cant: q, precio: P[code].precio, descuento: 0 });
+      }
+      if (!lines.length) continue;
+      const roll = rnd(); const forma = roll < 0.62 ? 'Efectivo' : roll < 0.85 ? 'Transferencia' : 'Crédito';
+      const v = { id: MNI.nextId(S), fecha: D(d), operacion: 'V-' + String(opn++).padStart(4, '0'), cliente: '', forma, vencimiento: '', lineas: lines };
+      if (forma === 'Crédito') { v.cliente = clientes[ri(0, clientes.length - 1)]; v.vencimiento = MNI.addDays(v.fecha, 15); ventasCred.push(v); }
+      S.ventas.push(v);
+    }
+  }
+  // Una devolución de venta y una de compra
+  const v0 = S.ventas.find(v => v.forma === 'Efectivo' && v.lineas.some(l => l.cant >= 4 && l.codigo !== 'HUE01'));
+  if (v0) { const l = v0.lineas.find(l => l.cant >= 4 && l.codigo !== 'HUE01'); S.devoluciones.push({ id: MNI.nextId(S), fecha: v0.fecha, tipo: 'venta', refId: v0.id, codigo: l.codigo, cant: 1, destino: 'Efectivo', motivo: 'Cliente devolvió un producto en buen estado' }); }
+  const c1 = compraMap[10]; S.devoluciones.push({ id: MNI.nextId(S), fecha: D(11), tipo: 'compra', refId: c1.id, codigo: 'HUE01', cant: 30, destino: 'Deuda', motivo: 'Huevos rotos en la entrega' });
+  stock.HUE01 -= 30;
+
+  // Ajustes y pérdidas
+  S.ajustes.push({ id: MNI.nextId(S), fecha: D(15), codigo: 'AGU01', tipo: 'Dañado', cant: -6, motivo: 'Botellas golpeadas en el almacén' });
+  S.ajustes.push({ id: MNI.nextId(S), fecha: D(20), codigo: 'SAL01', tipo: 'Vencido', cant: -4, motivo: 'Latas vencidas' });
+
+  // Gastos
+  const g = (d, concepto, categoria, tipo, monto, medio) => S.gastos.push({ id: MNI.nextId(S), fecha: D(d), concepto, categoria, tipo, monto, medio });
+  g(1, 'Alquiler del local', 'Alquiler', 'Fijo', 18000, 'Banco');
+  g(8, 'Factura de electricidad', 'Electricidad', 'Variable', 7800, 'Banco');
+  g(8, 'Agua', 'Agua', 'Variable', 650, 'Efectivo');
+  g(10, 'Internet y teléfono', 'Internet', 'Fijo', 1900, 'Banco');
+  g(15, 'Sueldo empleado (quincena)', 'Sueldos', 'Fijo', 9000, 'Efectivo');
+  g(nDays, 'Sueldo empleado (quincena)', 'Sueldos', 'Fijo', 9000, 'Efectivo');
+  g(7, 'Transporte de mercancía', 'Transporte', 'Variable', 1500, 'Efectivo');
+  g(21, 'Transporte de mercancía', 'Transporte', 'Variable', 1500, 'Efectivo');
+  g(18, 'Reparación de nevera', 'Mantenimiento', 'Variable', 2500, 'Efectivo');
+  g(nDays - 2, 'Comisión de transferencias', 'Comisiones', 'Variable', 480, 'Banco');
+
+  // Movimientos de caja y bancos
+  const mv = (d, tipo, concepto, monto, cuenta, categoria) => S.movimientos.push({ id: MNI.nextId(S), fecha: D(d), tipo, concepto, monto, cuenta: cuenta || 'Caja', categoria: categoria || '' });
+  mv(9, 'deposito', 'Depósito de ventas', 40000);
+  mv(18, 'deposito', 'Depósito de ventas', 40000);
+  mv(27, 'deposito', 'Depósito de ventas', 40000);
+  mv(16, 'retiro', 'Retiro del dueño (gastos de la casa)', 10000, 'Caja');
+  mv(nDays - 1, 'retiro', 'Retiro del dueño (gastos de la casa)', 10000, 'Caja');
+  mv(14, 'aporte', 'Aporte del dueño para reposición', 10000, 'Banco');
+  mv(26, 'otro_ingreso', 'Comisión por recarga de saldo', 2200, 'Caja');
+  mv(nDays - 3, 'otro_gasto', 'Intereses bancarios', 450, 'Banco', 'Intereses');
+
+  // Pagos a suplidores y cobros (después de generar compras/ventas)
+  const R0 = MNI.compute(S);
+  const cxp = R0.cxp;
+  const pay = (key, d, frac, medio) => { const doc = cxp.find(x => x.key === key); if (!doc) return; S.pagos.push({ id: MNI.nextId(S), fecha: D(d), docKey: key, monto: MNI.r2(doc.total * frac), medio }); };
+  pay('C' + compraMap[3].id, 20, 0.5, 'Banco');
+  pay('C' + compraMap[3].id, 28, 0.2, 'Efectivo');
+  pay('C' + compraMap[10].id, 25, 0.5, 'Efectivo');
+  pay('C' + compraMap[19].id, nDays, 0.3, 'Banco');
+  ventasCred.forEach((v, i) => {
+    const doc = R0.cxc.find(x => x.key === 'V' + v.id); if (!doc) return;
+    if (i % 2 === 0 && MNI.diffDays(v.fecha, first) < nDays - 3) {
+      const d = Math.min(nDays, MNI.diffDays(v.fecha, first) + 1 + ri(2, 6));
+      S.cobros.push({ id: MNI.nextId(S), fecha: D(d), docKey: 'V' + v.id, monto: doc.total, medio: i % 4 === 0 ? 'Efectivo' : 'Banco' });
+    }
+  });
+
+  // Cierres de caja de algunos días (uno con faltante)
+  const R1 = MNI.compute(S);
+  [8, 15, 22].forEach((d, i) => {
+    const esperado = MNI.ledgerBal(R1, 'Caja', D(d));
+    const dif = i === 1 ? -200 : 0;
+    S.cierres.push({ id: MNI.nextId(S), fecha: D(d), esperado, contado: MNI.r2(esperado + dif), diferencia: dif, nota: dif ? 'Posible cambio mal dado' : '' });
+  });
+  return S;
+}
+
+/* ============================================================
+   INTERFAZ · núcleo, estado, componentes y pantallas
+   ============================================================ */
+'use strict';
+const KEY = 'mni_estado_v1';
+let S, R, storageOK = true, lastSaved = '';
+const filters = {}; const ui = { tab: {}, kardex: null };
+const $ = (s, el) => (el || document).querySelector(s);
+const $$ = (s, el) => [...(el || document).querySelectorAll(s)];
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const nf = (n, d) => Number(n || 0).toLocaleString('es-DO', { minimumFractionDigits: d, maximumFractionDigits: d });
+const money = n => { n = Number(n) || 0; if (Math.abs(n) < 0.005) n = 0; return (n < 0 ? '-' : '') + 'RD$ ' + nf(Math.abs(n), 2); };
+const qty = n => nf(Math.round((Number(n) || 0) * 1000) / 1000, Math.abs((Number(n) || 0) % 1) > 1e-9 ? 2 : 0);
+const pct = x => (isFinite(x) ? (x * 100).toFixed(2) : '0.00') + '%';
+const fdate = s => (s && s.length === 10 && s !== MNI.BEGIN) ? s.split('-').reverse().join('/') : '';
+const hoyStr = () => MNI.todayStr();
+const cls = n => (n < -0.004 ? 'neg' : '');
+const clone = o => JSON.parse(JSON.stringify(o));
+
+/* ---------- estado y almacenamiento ---------- */
+const CAT_DEF = ['Granos y cereales', 'Aceites y grasas', 'Lácteos y huevos', 'Bebidas', 'Enlatados', 'Embutidos', 'Limpieza', 'Cuidado personal', 'Snacks y dulces', 'Otros'];
+const UNI_DEF = ['Unidad', 'Libra', 'Funda', 'Botella', 'Lata', 'Caja', 'Paquete', 'Galón', 'Litro', 'Saco'];
+const GCAT = [['Alquiler', 'Fijo'], ['Electricidad', 'Variable'], ['Agua', 'Variable'], ['Internet', 'Fijo'], ['Transporte', 'Variable'], ['Sueldos', 'Fijo'], ['Mantenimiento', 'Variable'], ['Comisiones', 'Variable'], ['Otros gastos', 'Variable']];
+function ensure(st) {
+  const base = MNI.emptyState();
+  Object.keys(base).forEach(k => { if (st[k] === undefined) st[k] = base[k]; });
+  Object.keys(base.config).forEach(k => { if (st.config[k] === undefined) st.config[k] = base.config[k]; });
+  Object.keys(base.config.itbis).forEach(k => { if (st.config.itbis[k] === undefined) st.config.itbis[k] = base.config.itbis[k]; });
+  if (!st.config.categorias) st.config.categorias = CAT_DEF.slice();
+  if (!st.config.unidades) st.config.unidades = UNI_DEF.slice();
+  st.seq = Math.max(st.seq || 1, 1);
+  return st;
+}
+function loadState() {
+  try { const raw = localStorage.getItem(KEY); if (raw) return ensure(JSON.parse(raw)); } catch (e) { storageOK = false; }
+  return ensure(MNI.emptyState());
+}
+function saveState() {
+  try { localStorage.setItem(KEY, JSON.stringify(S)); storageOK = true; lastSaved = new Date().toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' }); }
+  catch (e) { storageOK = false; }
+  const el = $('#saveState'); if (el) { el.textContent = storageOK ? 'Guardado ' + lastSaved : 'Sin guardado: exporta un respaldo'; el.className = storageOK ? '' : 'warn'; }
+}
+function recompute() { R = MNI.compute(S); }
+function firstLastDate() {
+  const ds = [];
+  S.compras.forEach(x => ds.push(x.fecha)); S.ventas.forEach(x => ds.push(x.fecha)); S.gastos.forEach(x => ds.push(x.fecha));
+  S.movimientos.forEach(x => ds.push(x.fecha)); S.pagos.forEach(x => ds.push(x.fecha)); S.cobros.forEach(x => ds.push(x.fecha));
+  S.devoluciones.forEach(x => ds.push(x.fecha)); S.ajustes.forEach(x => ds.push(x.fecha));
+  ds.sort(); return { first: ds[0] || S.config.fechaInicio || hoyStr(), last: ds[ds.length - 1] || hoyStr() };
+}
+
+/* ---------- período ---------- */
+const period = { preset: 'mes', month: '', from: '', to: '' };
+function initPeriod() {
+  const { last } = firstLastDate(); const h = hoyStr();
+  if (S.compras.length + S.ventas.length && last.slice(0, 7) < h.slice(0, 7)) { period.preset = 'mes_sel'; period.month = last.slice(0, 7); }
+  else { period.preset = 'mes'; period.month = h.slice(0, 7); }
+  period.from = MNI.monthStart(h); period.to = h;
+}
+function range() {
+  const h = hoyStr(); const fl = firstLastDate();
+  switch (period.preset) {
+    case 'mes': return [MNI.monthStart(h), MNI.monthEnd(h)];
+    case 'mesant': { const d = MNI.addDays(MNI.monthStart(h), -1); return [MNI.monthStart(d), d]; }
+    case '30d': return [MNI.addDays(h, -29), h];
+    case 'anio': return [h.slice(0, 4) + '-01-01', h.slice(0, 4) + '-12-31'];
+    case 'todo': return [fl.first, fl.last > h ? fl.last : h];
+    case 'mes_sel': { const s = (period.month || h.slice(0, 7)) + '-01'; return [s, MNI.monthEnd(s)]; }
+    default: { const a = period.from || h, b = period.to || h; return a <= b ? [a, b] : [b, a]; }
+  }
+}
+function periodLabel() { const [a, b] = range(); return fdate(a) + ' al ' + fdate(b); }
+function periodBar() {
+  const o = [['mes', 'Este mes'], ['mesant', 'Mes anterior'], ['30d', 'Últimos 30 días'], ['anio', 'Este año'], ['todo', 'Todo el tiempo'], ['mes_sel', 'Mes específico…'], ['custom', 'Rango personalizado…']];
+  return `<div class="pbar noprint"><label for="pp">Período:</label>
+    <select id="pp" data-period="preset">${o.map(x => `<option value="${x[0]}" ${period.preset === x[0] ? 'selected' : ''}>${x[1]}</option>`).join('')}</select>
+    ${period.preset === 'mes_sel' ? `<input type="month" id="pm" data-period="month" value="${esc(period.month)}">` : ''}
+    ${period.preset === 'custom' ? `<input type="date" id="pf" data-period="from" value="${esc(period.from)}"> <span>a</span> <input type="date" id="pt" data-period="to" value="${esc(period.to)}">` : ''}
+    <span class="muted">Consultando: <b>${periodLabel()}</b></span></div>`;
+}
+
+/* ---------- componentes ---------- */
+const badge = (t, k) => `<span class="badge b-${k || 'info'}">${esc(t)}</span>`;
+const howto = t => `<div class="howto"><b>¿Cómo se usa?</b> ${t}</div>`;
+const notice = (t, k) => `<div class="notice n-${k || 'warn'}">${t}</div>`;
+function pageH(title, sub, actions) { return `<div class="page-h"><div><h1>${esc(title)}</h1>${sub ? `<p>${sub}</p>` : ''}</div><div class="bar noprint" style="margin:0">${actions || ''}</div></div>`; }
+function tbl(heads, rows, o) {
+  o = o || {};
+  const th = heads.map(h => { const a = Array.isArray(h) ? h : [h, '']; return `<th class="${a[1]}">${esc(a[0])}</th>`; }).join('');
+  if (!rows.length) return `<div class="card muted" style="text-align:center">${o.empty || 'Todavía no hay registros.'}</div>`;
+  return `<div class="tw"><table ${o.id ? `id="${o.id}"` : ''}><thead><tr>${th}</tr></thead><tbody>${rows.join('')}</tbody>${o.foot ? `<tfoot>${o.foot}</tfoot>` : ''}</table></div>`;
+}
+function searchBox(key, ph) { return `<input class="search noprint" id="s_${key}" data-filter="${key}" placeholder="${esc(ph || 'Buscar…')}" value="${esc(filters[key] || '')}" aria-label="Buscar">`; }
+const match = (key, text) => !filters[key] || String(text).toLowerCase().includes(filters[key].toLowerCase());
+const btn = (act, label, data, kind, extra) => `<button class="btn ${kind || ''}" data-act="${act}" ${Object.entries(data || {}).map(([k, v]) => `data-${k}="${esc(v)}"`).join(' ')} ${extra || ''}>${label}</button>`;
+const inRange = (d, a, b) => d >= a && d <= b;
+
+/* ---------- gráficos SVG (sin internet) ---------- */
+function compact(n) { const a = Math.abs(n); const s = a >= 1e6 ? (a / 1e6).toFixed(1) + 'M' : a >= 1e3 ? (a / 1e3).toFixed(a >= 1e4 ? 0 : 1) + 'k' : String(Math.round(a)); return (n < 0 ? '-' : '') + s; }
+function barChart(data, o) {
+  o = o || {}; const W = 600, H = 240, L = 54, Rr = 10, T = 12, B = 32;
+  if (!data.length || data.every(d => !d.v)) return `<p class="muted" style="padding:30px 0;text-align:center">Sin datos en este período.</p>`;
+  let mx = Math.max(0, ...data.map(d => d.v)), mn = Math.min(0, ...data.map(d => d.v)); if (mx === mn) mx = mn + 1;
+  const step = (() => { const raw = (mx - mn) / 4, p = Math.pow(10, Math.floor(Math.log10(raw))); const f = raw / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; })();
+  const top = Math.ceil(mx / step) * step, bot = Math.floor(mn / step) * step;
+  const y = v => T + (H - T - B) * (1 - (v - bot) / (top - bot));
+  const bw = (W - L - Rr) / data.length, bwi = Math.max(2, Math.min(34, bw * 0.7));
+  let g = ''; for (let v = bot; v <= top + 1e-9; v += step) g += `<line class="gl" x1="${L}" x2="${W - Rr}" y1="${y(v)}" y2="${y(v)}"/><text class="tx" x="${L - 5}" y="${y(v) + 4}" text-anchor="end">${compact(v)}</text>`;
+  const every = Math.ceil(data.length / 12);
+  const bars = data.map((d, i) => {
+    const x = L + bw * i + (bw - bwi) / 2, y0 = y(0), y1 = y(d.v);
+    if (!d.v) return (i % every === 0 ? `<text class="tx" x="${(x + bwi / 2).toFixed(1)}" y="${H - 8}" text-anchor="middle">${esc(d.label)}</text>` : '');
+    return `<rect class="${d.v < 0 ? 'bar-neg' : (o.cls || 'bar-pos')}" x="${x.toFixed(1)}" y="${Math.min(y0, y1).toFixed(1)}" width="${bwi.toFixed(1)}" height="${Math.max(1, Math.abs(y0 - y1)).toFixed(1)}" rx="2"><title>${esc(d.label)}: ${money(d.v)}</title></rect>` +
+      (i % every === 0 ? `<text class="tx" x="${(x + bwi / 2).toFixed(1)}" y="${H - 8}" text-anchor="middle">${esc(d.label)}</text>` : '');
+  }).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.aria || 'Gráfico de barras')}">${g}<line class="axis" x1="${L}" x2="${W - Rr}" y1="${y(0)}" y2="${y(0)}"/>${bars}</svg>`;
+}
+function hbarChart(items, o) {
+  o = o || {}; if (!items.length) return `<p class="muted" style="padding:30px 0;text-align:center">Sin datos en este período.</p>`;
+  const W = 600, rowH = 32, L = 178, Rr = 96, H = items.length * rowH + 8; const mx = Math.max(...items.map(i => i.v), 1);
+  const rows = items.map((it, i) => {
+    const w = Math.max(2, (W - L - Rr) * it.v / mx), yy = 4 + i * rowH; const lbl = it.label.length > 21 ? it.label.slice(0, 20) + '…' : it.label;
+    return `<text class="tx-b" x="${L - 8}" y="${yy + 19}" text-anchor="end">${esc(lbl)}</text><rect class="${o.cls || 'bar-pos'}" x="${L}" y="${yy + 4}" width="${w.toFixed(1)}" height="20" rx="3"><title>${esc(it.label)}: ${esc(it.text || money(it.v))}</title></rect><text class="tx-b" x="${(L + w + 6).toFixed(1)}" y="${yy + 18}">${esc(it.text || compact(it.v))}</text>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.aria || 'Gráfico de barras horizontales')}">${rows}</svg>`;
+}
+function exportBtn(id, name) { return btn('csv', 'Exportar CSV', { id, name }, 'sec sm'); }
+
+/* ============================================================
+   PANTALLAS
+   ============================================================ */
+const NAV = [
+  ['panel', 'Panel de control'], ['productos', 'Productos'], ['compras', 'Compras'], ['ventas', 'Ventas'], ['inventario', 'Inventario'],
+  ['suplidores', 'Suplidores'], ['cxp', 'Cuentas por pagar'], ['cxc', 'Cuentas por cobrar'], ['caja', 'Caja y bancos'], ['gastos', 'Gastos'],
+  ['ajustes', 'Ajustes y devoluciones'], ['resultados', 'Estado de resultados'], ['resumen', 'Resumen financiero'], ['conteo', 'Conteo físico'], ['alertas', 'Alertas'], ['config', 'Parámetros y datos'],
+];
+const views = {};
+
+/* ---------- 1. Panel ---------- */
+views.panel = function () {
+  const [a, b] = range(); const h = hoyStr();
+  if (!S.productos.length) return welcome();
+  const res = MNI.resultados(S, R, a, b); const al = MNI.alertas(S, R, h);
+  const find = t => (al.find(x => x.titulo === t) || { cant: 0 }).cant;
+  const cxp = MNI.docsAt(S, R, 'cxp', b, h).reduce((s, d) => s + d.saldo, 0), cxc = MNI.docsAt(S, R, 'cxc', b, h).reduce((s, d) => s + d.saldo, 0);
+  const bal = MNI.balance(S, R, b, h);
+  const bajos = find('Productos por debajo del mínimo'), agot = find('Productos agotados'), prox = find('Productos próximos a vencer'), venc = find('Productos vencidos con existencia');
+  const k = (l, v, s, c) => `<div class="kpi ${c || ''}"><div class="l">${l}</div><div class="v ${v < 0 ? 'neg' : ''}">${typeof v === 'number' ? money(v) : v}</div>${s ? `<div class="s">${s}</div>` : ''}</div>`;
+  const gcat = Object.entries(res.porCat).sort((x, y) => y[1] - x[1]).map(([l, v]) => ({ label: l, v }));
+  const top = MNI.topProductos(S, R, a, b, 8).map(t => ({ label: t.nombre, v: t.unidades, text: qty(t.unidades) + ' und.' }));
+  const critical = al.filter(x => x.nivel === 'alta').length;
+  return pageH('Panel de control', esc(S.config.negocio || '') + ' · valores sin ITBIS' + (S.config.itbis.activo ? '' : ''), btn('go', 'Ver alertas' + (al.length ? ' (' + al.length + ')' : ''), { to: 'alertas' }, critical ? 'yel' : 'sec')) +
+    howto('Elige el período arriba. Los cuadros se actualizan solos con lo que registras en Compras, Ventas, Gastos y Caja. Si ves una alerta roja, entra a <b>Alertas</b> y revisa lo que se indica.') + periodBar() +
+    (bal.cuadra ? '' : notice('<b>El balance no cuadra</b> (diferencia ' + money(bal.diferencia) + '). Revisa Resumen financiero.', 'bad')) +
+    `<div class="grid kpis">
+      ${k('Valor total del inventario', MNI.invTotal(R, b, false), 'al ' + fdate(b > MNI.END ? h : b), 'navy')}
+      ${k('Productos registrados', String(S.productos.length), S.productos.filter(p => p.estado === 'Inactivo').length + ' inactivos', 'navy')}
+      ${k('Existencias bajas', String(bajos + agot), agot + ' agotados', (bajos + agot) ? 'warn' : '')}
+      ${k('Próximos a vencer', String(prox + venc), venc ? venc + ' ya vencidos' : 'en los próximos ' + S.config.diasAlertaVence + ' días', (prox + venc) ? 'warn' : '')}
+      ${k('Compras del período', res.comprasNetas, 'netas de devoluciones y descuentos', 'navy')}
+      ${k('Ventas del período', res.ventasNetas, 'ventas netas', '')}
+      ${k('Cuentas por pagar', cxp, 'al cierre del período', cxp > 0 ? 'warn' : '')}
+      ${k('Cuentas por cobrar', cxc, 'al cierre del período', cxc > 0 ? 'warn' : '')}
+      ${k('Gastos del período', res.gastosOp, 'gastos operativos', 'warn')}
+      ${k('Costo de ventas', res.costoVentas, 'inv. inicial + compras − inv. final', 'navy')}
+      ${k('Beneficio bruto', res.beneficioBruto, 'margen bruto ' + pct(res.margenBruto), '')}
+      ${k('Utilidad neta', res.resultadoNeto, res.resultadoNeto < 0 ? 'el colmado perdió dinero en el período' : 'después de gastos', res.resultadoNeto < 0 ? 'bad' : '')}
+    </div>
+    <div class="grid charts">
+      <div class="chart"><h3>Ventas por período</h3>${barChart(MNI.seriesDiarias(S, R, a, b > h && period.preset !== 'anio' ? h : b, 'ventas'), { aria: 'Ventas por período' })}</div>
+      <div class="chart"><h3>Compras por período</h3>${barChart(MNI.seriesDiarias(S, R, a, b > h && period.preset !== 'anio' ? h : b, 'compras'), { cls: 'bar-navy', aria: 'Compras por período' })}</div>
+      <div class="chart"><h3>Gastos por categoría</h3>${hbarChart(gcat, { cls: 'bar-yel', aria: 'Gastos por categoría' })}</div>
+      <div class="chart"><h3>Productos de mayor movimiento</h3>${hbarChart(top, { aria: 'Productos más vendidos' })}</div>
+      <div class="chart"><h3>Evolución de la utilidad (6 meses)</h3>${barChart(MNI.evolucionUtilidad(S, R, b > h ? h : b, 6), { aria: 'Evolución de la utilidad' })}</div>
+    </div>`;
+};
+function welcome() {
+  return `<div class="welcome"><span class="pill">NÚMEROS Y NEGOCIOS RD</span><h1 style="margin-top:8px">Bienvenido a Mi Negocio Inteligente</h1>
+    <p>Deja de adivinar cuánto ganas. Aquí registras lo que pasa en tu colmado y el sistema calcula inventario, costos, deudas, ganancias y balance.</p>
+    <ol><li>Entra a <b>Parámetros y datos</b> y anota el efectivo y el banco con que empiezas.</li><li>Registra tus <b>Productos</b> con su existencia y su costo.</li><li>Registra tus <b>Suplidores</b>.</li><li>Cada día anota <b>Compras</b>, <b>Ventas</b> y <b>Gastos</b>.</li><li>Revisa el <b>Panel</b> y las <b>Alertas</b>.</li></ol>
+    <div class="bar">${btn('go', 'Empezar con mi colmado', { to: 'config' }, 'yel')} ${btn('demo', 'Ver con datos de demostración', {}, 'sec')}</div></div>
+    ${notice('Esta herramienta es de <b>control interno y educativa</b>. No es un sistema fiscal ni contable certificado y no sustituye tus obligaciones ante la DGII.', 'warn')}`;
+}
+
+/* ---------- 2. Productos ---------- */
+views.productos = function () {
+  const it = S.config.itbis.activo;
+  const rows = S.productos.filter(p => match('prod', p.codigo + ' ' + p.nombre + ' ' + p.categoria + ' ' + p.suplidor)).map(p => {
+    const rate = R.rateOf(p.codigo); const pb = (rate && R.incl) ? p.precio / (1 + rate) : p.precio, cb = (rate && R.incl) ? p.costo / (1 + rate) : p.costo;
+    const marg = pb ? (pb - cb) / pb : 0, rec = cb ? (pb - cb) / cb : 0;
+    return `<tr><td><b>${esc(p.codigo)}</b></td><td>${esc(p.nombre)}</td><td>${esc(p.categoria)}</td><td>${esc(p.unidad)}</td><td>${esc(p.suplidor)}</td>
+      <td class="num">${qty(p.existencia)}</td><td class="num">${nf(p.costo, 2)}</td><td class="num">${nf(p.precio, 2)}</td><td class="num">${qty(p.minimo)}</td><td>${fdate(p.vence)}</td><td>${p.estado === 'Inactivo' ? badge('Inactivo', 'warn') : badge('Activo', 'ok')}</td>
+      ${it ? `<td>${p.itbis === 'exento' ? 'Exento' : p.itbis === 'reducida' ? 'Reducida' : 'General'}</td>` : ''}
+      <td class="num">${money(p.existencia * cb)}</td><td class="num ${cls(marg)}">${pct(marg)}</td><td class="num">${pct(rec)}</td>
+      <td class="noprint" style="white-space:nowrap">${btn('prod-edit', 'Editar', { id: p.codigo }, 'sec sm')} ${btn('prod-del', 'Borrar', { id: p.codigo }, 'danger sm')}</td></tr>`;
+  });
+  return pageH('Registro de productos', 'Tu catálogo: agrega aquí cada producto que vendes.', btn('prod-new', '+ Nuevo producto') + exportBtn('tProd', 'productos')) +
+    howto('Escribe un código corto por producto (por ejemplo ARR01). La <b>existencia inicial</b> y el <b>costo unitario</b> son lo que tenías el día que empiezas; después, las compras y ventas mueven el inventario solas. Verás el <b>margen</b> (sobre el precio) y el <b>recargo</b> (sobre el costo) calculados.') +
+    `<div class="bar">${searchBox('prod', 'Buscar producto, categoría o suplidor…')}<span class="muted">${S.productos.length} productos</span></div>` +
+    tbl(['Código', 'Producto', 'Categoría', 'Unidad', 'Suplidor', ['Exist. inicial', 'num'], ['Costo', 'num'], ['Precio', 'num'], ['Mínimo', 'num'], 'Vence', 'Estado'].concat(it ? ['ITBIS'] : []).concat([['Valor inicial', 'num'], ['Margen', 'num'], ['Recargo', 'num'], '']), rows, { id: 'tProd' });
+};
+
+/* ---------- 3. Compras ---------- */
+views.compras = function () {
+  const [a, b] = range();
+  const list = R.compras.filter(c => inRange(c.fecha, a, b) && match('comp', c.factura + ' ' + c.suplidor + ' ' + c.lineas.map(l => l.codigo).join(' '))).sort((x, y) => y.fecha.localeCompare(x.fecha) || y.id - x.id);
+  const rows = []; let tot = 0;
+  list.forEach(c => {
+    c.lineas.forEach((l, i) => {
+      const p = R.P[l.codigo] || {};
+      rows.push(`<tr><td>${i ? '' : fdate(c.fecha)}</td><td>${i ? '' : '<b>' + esc(c.factura) + '</b>'}</td><td>${i ? '' : esc(c.suplidor)}</td><td>${esc(l.codigo)}</td><td>${esc(p.nombre || '')}</td>
+        <td class="num">${qty(l.cant)}</td><td class="num">${nf(l.costo, 2)}</td><td class="num">${nf(l.descuento, 2)}</td><td class="num">${nf(l.adicional, 2)}</td><td class="num">${money(l.base)}</td>
+        <td>${i ? '' : esc(c.forma === 'Contado' ? 'Contado · ' + (c.medio || 'Efectivo') : 'Crédito')}</td>
+        <td>${i ? '' : compraEstado(c)}</td><td class="noprint">${i ? '' : btn('compra-del', 'Borrar', { id: c.id }, 'danger sm')}</td></tr>`);
+    });
+    tot += c.base;
+  });
+  return pageH('Registro de compras', 'Cada factura de un suplidor, con sus productos.', btn('compra-new', '+ Registrar compra') + exportBtn('tComp', 'compras')) +
+    howto('Registra cada factura que recibes. Pon el <b>número de factura</b> (no se permite repetirlo con el mismo suplidor), el producto, la cantidad y el costo. Si el suplidor te hizo un descuento o cobró flete, anótalo en su casilla: el sistema calcula el <b>costo real</b> y actualiza el inventario. Si es a crédito, indica la fecha de vencimiento.') + periodBar() +
+    `<div class="bar">${searchBox('comp', 'Buscar factura, suplidor o producto…')}</div>` +
+    tbl(['Fecha', 'Factura', 'Suplidor', 'Código', 'Descripción', ['Cantidad', 'num'], ['Costo unit.', 'num'], ['Descuento', 'num'], ['Costos adic.', 'num'], ['Importe neto', 'num'], 'Forma de pago', 'Estado', ''], rows,
+      { id: 'tComp', foot: `<tr><td colspan="9">Total compras del período${S.config.itbis.activo ? ' (sin ITBIS)' : ''}</td><td class="num">${money(tot)}</td><td colspan="3"></td></tr>`, empty: 'No hay compras en este período.' });
+};
+function compraEstado(c) {
+  if (c.forma !== 'Crédito') return badge('Pagada', 'ok');
+  const d = MNI.docsAt(S, R, 'cxp', MNI.END, hoyStr()).find(x => x.key === 'C' + c.id);
+  return d ? badge(d.estado, d.estado === 'Pagada' ? 'ok' : d.estado === 'Vencida' ? 'bad' : 'warn') : '';
+}
+
+/* ---------- 4. Ventas ---------- */
+views.ventas = function () {
+  const [a, b] = range();
+  const list = R.ventas.filter(v => inRange(v.fecha, a, b) && match('vent', v.operacion + ' ' + (v.cliente || '') + ' ' + v.lineas.map(l => l.codigo).join(' '))).sort((x, y) => y.fecha.localeCompare(x.fecha) || y.id - x.id);
+  const rows = []; let tot = 0, cst = 0;
+  list.forEach(v => v.lineas.forEach((l, i) => {
+    const p = R.P[l.codigo] || {}; const mg = l.base - l.cost; const cu = l.cant ? l.cost / l.cant : 0;
+    rows.push(`<tr><td>${i ? '' : fdate(v.fecha)}</td><td>${i ? '' : '<b>' + esc(v.operacion) + '</b>' + (v.autorizada ? ' ' + badge('autorizada', 'warn') : '')}</td><td>${esc(l.codigo)}</td><td>${esc(p.nombre || '')}</td>
+      <td class="num">${qty(l.cant)}</td><td class="num">${nf(l.precio, 2)}</td><td class="num">${nf(l.descuento, 2)}</td><td class="num">${money(l.base)}</td>
+      <td class="num">${nf(cu, 2)}</td><td class="num">${money(l.cost)}</td><td class="num ${cls(mg)}">${money(mg)}</td>
+      <td>${i ? '' : esc(v.forma) + (v.cliente ? ' · ' + esc(v.cliente) : '')}</td><td class="noprint">${i ? '' : btn('venta-del', 'Borrar', { id: v.id }, 'danger sm')}</td></tr>`);
+    tot += l.base; cst += l.cost;
+  }));
+  return pageH('Registro de ventas', 'Cada venta descuenta la mercancía del inventario automáticamente.', btn('venta-new', '+ Registrar venta') + exportBtn('tVent', 'ventas')) +
+    howto('Anota cada venta con su forma de cobro. Si vendes <b>a crédito (fiao)</b>, escribe el nombre del cliente y la fecha en que debe pagar: la venta cuenta, pero el dinero no entra a caja hasta que cobres. Si intentas vender más de lo que tienes, el sistema te avisa y pide tu autorización.') + periodBar() +
+    `<div class="bar">${searchBox('vent', 'Buscar operación, cliente o producto…')}</div>` +
+    tbl(['Fecha', 'Operación', 'Código', 'Descripción', ['Cantidad', 'num'], ['Precio unit.', 'num'], ['Descuento', 'num'], ['Total venta', 'num'], ['Costo unit.', 'num'], ['Costo mercancía', 'num'], ['Margen bruto', 'num'], 'Forma de cobro', ''], rows,
+      { id: 'tVent', foot: `<tr><td colspan="7">Total del período${S.config.itbis.activo ? ' (sin ITBIS)' : ''}</td><td class="num">${money(tot)}</td><td></td><td class="num">${money(cst)}</td><td class="num">${money(tot - cst)}</td><td colspan="2"></td></tr>`, empty: 'No hay ventas en este período.' });
+};
+
+/* ---------- 5. Inventario ---------- */
+views.inventario = function () {
+  const [a, b] = range(); const h = hoyStr();
+  const inv = MNI.inventarioResumen(S, R, a, b).filter(x => match('inv', x.codigo + ' ' + x.nombre + ' ' + x.categoria));
+  const total = inv.reduce((s, x) => s + x.valor, 0);
+  const rows = inv.map(x => {
+    let st = badge('Normal', 'ok');
+    if (x.existencia < -1e-9) st = badge('Negativa', 'bad'); else if (x.existencia <= 1e-9) st = badge('Agotado', 'bad');
+    else if (x.minimo > 0 && x.existencia <= x.minimo) st = badge('Bajo mínimo', 'warn');
+    if (x.vence && x.existencia > 0 && x.vence < h) st += ' ' + badge('Vencido', 'bad'); else if (x.vence && x.existencia > 0 && MNI.diffDays(x.vence, h) <= S.config.diasAlertaVence) st += ' ' + badge('Vence pronto', 'warn');
+    return `<tr class="click" data-act="kardex" data-id="${esc(x.codigo)}"><td><b>${esc(x.codigo)}</b></td><td>${esc(x.nombre)}</td><td class="num">${qty(x.qIni)}</td><td class="num">${qty(x.entradas)}</td><td class="num">${qty(x.salidas)}</td><td class="num">${qty(x.devoluciones)}</td><td class="num">${qty(x.ajustes)}</td><td class="num">${qty(x.perdidas)}</td>
+      <td class="num ${cls(x.existencia)}"><b>${qty(x.existencia)}</b></td><td class="num">${nf(x.costoU, 2)}</td><td class="num">${money(x.valor)}</td><td>${st}</td></tr>`;
+  });
+  const res = MNI.resultados(S, R, a, b); const prom = (res.invIni + res.invFin) / 2; const rot = prom > 0 ? res.costoVentas / prom : 0; const dias = rot > 0 ? (MNI.diffDays(b > h ? h : b, a) + 1) / rot : 0;
+  const lim = MNI.addDays(h, -60); const vendidos = new Set(); R.ventas.filter(v => v.fecha >= lim).forEach(v => v.lineas.forEach(l => vendidos.add(l.codigo)));
+  const lentos = MNI.inventarioResumen(S, R, MNI.BEGIN, MNI.END).filter(x => x.existencia > 0 && x.estado !== 'Inactivo' && !vendidos.has(x.codigo));
+  return pageH('Control de inventario', 'Método de valoración: costo promedio ponderado móvil.', exportBtn('tInv', 'inventario')) +
+    howto('Aquí no se digita nada: el inventario se calcula con tus compras, ventas, devoluciones y ajustes. Toca un producto para ver su historial (kardex). Las <b>Entradas</b> son compras, las <b>Salidas</b> son ventas y las <b>Pérdidas</b> son mercancía dañada o vencida.') + periodBar() +
+    `<div class="grid kpis"><div class="kpi navy"><div class="l">Valor del inventario</div><div class="v">${money(total)}</div></div>
+      <div class="kpi"><div class="l">Rotación del período</div><div class="v">${rot.toFixed(2)} veces</div><div class="s">costo de ventas ÷ inventario promedio</div></div>
+      <div class="kpi"><div class="l">Días de inventario</div><div class="v">${dias ? dias.toFixed(1) : '—'}</div><div class="s">tiempo que tarda en venderse</div></div>
+      <div class="kpi ${lentos.length ? 'warn' : ''}"><div class="l">Sin ventas en 60 días</div><div class="v">${lentos.length}</div><div class="s">${esc(lentos.slice(0, 3).map(x => x.nombre).join(', '))}</div></div></div>` +
+    `<div class="bar">${searchBox('inv', 'Buscar producto…')}</div>` +
+    tbl(['Código', 'Producto', ['Inv. inicial', 'num'], ['Entradas', 'num'], ['Salidas', 'num'], ['Devoluc.', 'num'], ['Ajustes', 'num'], ['Pérdidas', 'num'], ['Existencia actual', 'num'], ['Costo unit.', 'num'], ['Valor total', 'num'], 'Estado'], rows,
+      { id: 'tInv', foot: `<tr><td colspan="10">Valor total del inventario</td><td class="num">${money(total)}</td><td></td></tr>` });
+};
+
+/* ---------- 6. Suplidores ---------- */
+views.suplidores = function () {
+  const h = hoyStr(); const docs = MNI.docsAt(S, R, 'cxp', MNI.END, h);
+  const rows = S.suplidores.filter(s => match('sup', s.nombre + ' ' + (s.rnc || '') + ' ' + (s.contacto || ''))).map(s => {
+    const comp = R.compras.filter(c => c.suplidor === s.nombre); const contado = comp.filter(c => c.forma === 'Contado').reduce((t, c) => t + c.total, 0), cred = comp.filter(c => c.forma === 'Crédito').reduce((t, c) => t + c.total, 0);
+    const dd = docs.filter(d => d.suplidor === s.nombre); const saldo = dd.reduce((t, d) => t + d.saldo, 0);
+    const abon = dd.reduce((t, d) => t + d.abonos, 0); const venc = dd.filter(d => d.saldo > 0.005 && d.vencimiento).sort((x, y) => x.vencimiento.localeCompare(y.vencimiento))[0];
+    return `<tr class="click" data-act="sup-hist" data-id="${s.id}"><td><b>${esc(s.nombre)}</b></td><td>${esc(s.rnc || '')}</td><td>${esc(s.telefono || '')}</td><td>${esc(s.contacto || '')}</td><td>${esc(s.direccion || '')}</td><td>${s.dias ? s.dias + ' días' : 'Contado'}</td>
+      <td class="num">${money(comp.reduce((t, c) => t + c.total, 0))}</td><td class="num">${money(contado)}</td><td class="num">${money(cred)}</td><td class="num">${money(abon)}</td><td class="num ${saldo > 0.005 ? 'neg' : ''}"><b>${money(saldo)}</b></td>
+      <td>${venc ? fdate(venc.vencimiento) + (venc.vencimiento < h ? ' ' + badge('vencida', 'bad') : '') : ''}</td><td class="noprint" style="white-space:nowrap">${btn('sup-edit', 'Editar', { id: s.id }, 'sec sm')} ${btn('sup-del', 'Borrar', { id: s.id }, 'danger sm')}</td></tr>`;
+  });
+  return pageH('Control de suplidores', 'Quién te vende, cuánto le compras y cuánto le debes.', btn('sup-new', '+ Nuevo suplidor') + exportBtn('tSup', 'suplidores')) +
+    howto('Registra a cada suplidor con su RNC (si lo tiene), teléfono y los <b>días de crédito</b> que te da. Toca un suplidor para ver todas sus facturas, abonos y saldo.') +
+    `<div class="bar">${searchBox('sup', 'Buscar suplidor…')}</div>` +
+    tbl(['Suplidor', 'RNC / ID', 'Teléfono', 'Contacto', 'Dirección', 'Crédito', ['Compras totales', 'num'], ['De contado', 'num'], ['A crédito', 'num'], ['Abonos', 'num'], ['Balance pendiente', 'num'], 'Próx. vencimiento', ''], rows, { id: 'tSup', empty: 'Aún no has registrado suplidores. Empieza con el botón "+ Nuevo suplidor".' });
+};
+
+/* ---------- 7 y 8. Cuentas por pagar / cobrar ---------- */
+function cuentas(tipo) {
+  const h = hoyStr(); const isP = tipo === 'cxp';
+  const all = MNI.docsAt(S, R, tipo, MNI.END, h);
+  const fe = filters[tipo + '_est'] || 'abiertas';
+  let list = all.filter(d => fe === 'todas' ? true : fe === 'abiertas' ? d.saldo > 0.005 : d.estado === fe);
+  list = list.filter(d => match(tipo, (isP ? d.suplidor + ' ' + d.factura : d.cliente + ' ' + d.operacion))).sort((x, y) => (x.vencimiento || '9').localeCompare(y.vencimiento || '9'));
+  const rows = list.map(d => {
+    const bk = d.estado === 'Pagada' ? 'ok' : d.estado === 'Vencida' ? 'bad' : d.estado === 'Abonada' ? 'info' : 'warn';
+    const dias = d.saldo > 0.005 && d.dias !== null ? (d.dias < 0 ? `<span class="neg">${-d.dias} d. de atraso</span>` : d.dias + ' d.') : '';
+    return `<tr><td><b>${esc(isP ? d.suplidor : d.cliente)}</b></td><td>${esc(isP ? d.factura : d.operacion)}</td><td>${fdate(d.fecha)}</td><td>${fdate(d.vencimiento)}</td><td class="num">${money(d.total)}</td><td class="num">${money(d.abonos)}</td><td class="num ${d.saldo > 0.005 ? 'neg' : ''}"><b>${money(d.saldo)}</b></td><td>${badge(d.estado, bk)}</td><td>${dias}</td>
+      <td class="noprint" style="white-space:nowrap">${d.saldo > 0.005 ? btn(isP ? 'pagar' : 'cobrar', isP ? 'Abonar / pagar' : 'Cobrar', { key: d.key, tipo }, 'sm') : ''}${d.tipo === 'saldo inicial' ? ' ' + btn('ini-del', 'Borrar', { key: d.key, tipo }, 'danger sm') : ''}</td></tr>`;
+  });
+  const abiertas = all.filter(d => d.saldo > 0.005);
+  const totSaldo = abiertas.reduce((s, d) => s + d.saldo, 0), totV = abiertas.filter(d => d.estado === 'Vencida').reduce((s, d) => s + d.saldo, 0);
+  const regs = (isP ? S.pagos : S.cobros).slice().sort((x, y) => y.fecha.localeCompare(x.fecha) || y.id - x.id);
+  const nameOf = k => { const d = all.find(x => x.key === k); return d ? (isP ? d.suplidor + ' · fact. ' + d.factura : d.cliente + ' · ' + d.operacion) : k; };
+  const regRows = regs.slice(0, 60).map(p => `<tr><td>${fdate(p.fecha)}</td><td>${esc(nameOf(p.docKey))}</td><td>${esc(p.medio)}</td><td class="num">${money(p.monto)}</td><td class="noprint">${btn('reg-del', 'Borrar', { id: p.id, tipo }, 'danger sm')}</td></tr>`);
+  const est = ['abiertas', 'todas', 'Pendiente', 'Abonada', 'Vencida', 'Pagada'];
+  return pageH(isP ? 'Cuentas por pagar' : 'Cuentas por cobrar', isP ? 'Lo que le debes a tus suplidores.' : 'Lo que te deben tus clientes (fiaos).', btn('ini-new', isP ? '+ Deuda anterior' : '+ Fiao anterior', { tipo }, 'sec') + exportBtn('t_' + tipo, tipo)) +
+    howto(isP ? 'Las compras <b>a crédito</b> aparecen solas aquí. Cuando pagues, toca <b>Abonar / pagar</b>: el sistema descuenta el saldo y evita pagar más de lo que debes. Pagar una factura no es un gasto. Las facturas vencidas se marcan en rojo.' : 'Las ventas <b>a crédito</b> aparecen solas aquí. Cuando el cliente pague, toca <b>Cobrar</b>. El cobro no es una venta nueva: solo cambia lo que te deben por dinero.') +
+    `<div class="grid kpis"><div class="kpi ${totSaldo > 0 ? 'warn' : ''}"><div class="l">Saldo total pendiente</div><div class="v">${money(totSaldo)}</div><div class="s">${abiertas.length} documentos abiertos</div></div><div class="kpi ${totV > 0 ? 'bad' : ''}"><div class="l">Vencido</div><div class="v">${money(totV)}</div></div></div>` +
+    `<div class="bar">${searchBox(tipo, isP ? 'Buscar suplidor o factura…' : 'Buscar cliente u operación…')}<select data-filter-sel="${tipo}_est" aria-label="Estado">${est.map(e => `<option value="${e}" ${fe === e ? 'selected' : ''}>${e === 'abiertas' ? 'Solo con saldo' : e === 'todas' ? 'Todas' : e}</option>`).join('')}</select></div>` +
+    tbl([isP ? 'Suplidor' : 'Cliente', isP ? 'Factura' : 'Operación', 'Emisión', 'Vencimiento', ['Importe original', 'num'], [isP ? 'Abonos' : 'Cobros', 'num'], ['Saldo pendiente', 'num'], 'Estado', 'Plazo', ''], rows, { id: 't_' + tipo, empty: isP ? 'No tienes facturas por pagar con este filtro.' : 'No tienes cuentas por cobrar con este filtro.' }) +
+    `<h2 style="margin:22px 0 8px">${isP ? 'Pagos y abonos registrados' : 'Cobros registrados'}</h2>` + tbl(['Fecha', 'Documento', 'Medio', ['Monto', 'num'], ''], regRows, { empty: 'Todavía no hay registros.' });
+}
+views.cxp = () => cuentas('cxp'); views.cxc = () => cuentas('cxc');
+
+/* ---------- 9. Caja y bancos ---------- */
+views.caja = function () {
+  const [a, b] = range(); const h = hoyStr(); const cf = filters.caja_cta || 'Todas';
+  const L = R.ledger.filter(e => e.date >= a && e.date <= b && (cf === 'Todas' || e.cuenta === cf) && match('caja', e.concepto + ' ' + e.tipo));
+  let run = MNI.ledgerBal(R, cf === 'Todas' ? null : cf, MNI.addDays(a, -1));
+  const rows = L.map(e => { run = MNI.r2(run + e.entrada - e.salida); return `<tr><td>${fdate(e.date)}</td><td>${esc(e.concepto)}</td><td class="num">${e.entrada ? money(e.entrada) : ''}</td><td class="num">${e.salida ? money(e.salida) : ''}</td><td>${esc(e.tipo)}</td><td>${esc(e.medio)}</td><td>${esc(e.cuenta)}</td><td class="num ${cls(run)}">${money(run)}</td></tr>`; });
+  const caja = MNI.ledgerBal(R, 'Caja', b), banco = MNI.ledgerBal(R, 'Banco', b);
+  const te = L.reduce((s, e) => s + e.entrada, 0), ts = L.reduce((s, e) => s + e.salida, 0);
+  const fcierre = filters.cierreFecha || (b > h ? h : b); const ci = MNI.cierreInfo(S, R, fcierre); const saved = S.cierres.find(c => c.fecha === fcierre);
+  const porRows = Object.entries(ci.por).map(([k, v]) => `<tr><td>${esc(k)}</td><td class="num ${cls(v)}">${money(v)}</td></tr>`).join('');
+  return pageH('Caja y bancos', 'Todo el dinero que entra y sale, con su tipo de movimiento.', btn('mov-new', '+ Movimiento de caja / banco') + exportBtn('tCaja', 'caja_y_bancos')) +
+    howto('Las ventas, compras de contado, cobros, pagos y gastos aparecen solos. Aquí registras lo demás: <b>aportes</b> y <b>retiros del dueño</b>, préstamos, depósitos al banco y otros ingresos. Un retiro del dueño <b>no es un gasto</b>. Al final del día usa el <b>Cierre de caja</b>.') + periodBar() +
+    `<div class="grid kpis"><div class="kpi"><div class="l">Efectivo en caja</div><div class="v ${cls(caja)}">${money(caja)}</div><div class="s">al ${fdate(b > MNI.END ? h : b)}</div></div><div class="kpi navy"><div class="l">Saldo en banco</div><div class="v ${cls(banco)}">${money(banco)}</div></div>
+      <div class="kpi"><div class="l">Entradas del período</div><div class="v">${money(te)}</div></div><div class="kpi warn"><div class="l">Salidas del período</div><div class="v">${money(ts)}</div></div></div>` +
+    `<div class="card"><h2>Cierre de caja</h2><div class="fg"><div class="f"><label for="cf">Fecha</label><input type="date" id="cf" data-cierre="fecha" value="${esc(fcierre)}"></div>
+      <div class="f"><label>Apertura (efectivo al inicio del día)</label><input value="${nf(ci.apertura, 2)}" readonly></div>
+      <div class="f"><label>Efectivo esperado al cierre</label><input value="${nf(ci.esperado, 2)}" readonly></div>
+      <div class="f"><label for="cc">Efectivo contado</label><input type="number" step="0.01" id="cc" value="${saved ? saved.contado : ''}" placeholder="Cuenta el efectivo y escríbelo"></div></div>
+      ${porRows ? `<div class="tw" style="margin-top:10px"><table><thead><tr><th>Movimientos de caja de ese día</th><th class="num">Neto</th></tr></thead><tbody>${porRows}</tbody></table></div>` : '<p class="muted">Sin movimientos de caja ese día.</p>'}
+      <div class="bar" style="margin-top:10px"><input id="cn" placeholder="Nota (opcional)" value="${esc(saved ? saved.nota : '')}" style="flex:1"> ${btn('cierre-save', 'Guardar cierre')}</div>
+      ${saved ? notice(Math.abs(saved.diferencia) < 0.005 ? '<b>Cuadrado.</b> No hay diferencia.' : `<b>${saved.diferencia < 0 ? 'Faltante' : 'Sobrante'} de ${money(Math.abs(saved.diferencia))}</b> en el cierre de ese día. Revisa cambios mal dados, gastos o retiros sin anotar.`, Math.abs(saved.diferencia) < 0.005 ? 'ok' : 'bad') : ''}</div>` +
+    `<div class="bar">${searchBox('caja', 'Buscar concepto…')}<select data-filter-sel="caja_cta" aria-label="Cuenta">${['Todas', 'Caja', 'Banco'].map(x => `<option ${cf === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>` +
+    tbl(['Fecha', 'Concepto', ['Entrada', 'num'], ['Salida', 'num'], 'Tipo de movimiento', 'Medio de pago', 'Cuenta', ['Balance acumulado', 'num']], rows, { id: 'tCaja', empty: 'No hay movimientos en este período.' });
+};
+
+/* ---------- 10. Gastos ---------- */
+views.gastos = function () {
+  const [a, b] = range();
+  const list = S.gastos.filter(g => inRange(g.fecha, a, b) && match('gas', g.concepto + ' ' + g.categoria)).sort((x, y) => y.fecha.localeCompare(x.fecha) || y.id - x.id);
+  const rows = list.map(g => `<tr><td>${fdate(g.fecha)}</td><td>${esc(g.concepto)}</td><td>${esc(g.categoria)}</td><td>${g.tipo === 'Fijo' ? badge('Fijo', 'info') : badge('Variable', 'warn')}</td><td>${esc(g.medio)}</td><td class="num">${money(g.monto)}</td><td class="noprint" style="white-space:nowrap">${btn('gasto-edit', 'Editar', { id: g.id }, 'sec sm')} ${btn('gasto-del', 'Borrar', { id: g.id }, 'danger sm')}</td></tr>`);
+  const res = MNI.resultados(S, R, a, b); const cat = Object.entries(res.porCat).sort((x, y) => y[1] - x[1]);
+  return pageH('Gastos del negocio', 'Alquiler, luz, sueldos y todo lo que cuesta operar.', btn('gasto-new', '+ Registrar gasto') + exportBtn('tGas', 'gastos')) +
+    howto('Anota cada gasto con su categoría. Los <b>gastos fijos</b> son los que pagas aunque vendas poco (alquiler, sueldos); los <b>variables</b> cambian con la actividad (transporte, luz). <b>No registres aquí lo que sacas para tu casa</b>: eso es un retiro del dueño en Caja y bancos.') + periodBar() +
+    `<div class="grid kpis"><div class="kpi warn"><div class="l">Total gastos</div><div class="v">${money(res.gastosOp)}</div><div class="s">${res.ventasNetas ? pct(res.gastosOp / res.ventasNetas) + ' de las ventas netas' : ''}</div></div><div class="kpi navy"><div class="l">Gastos fijos</div><div class="v">${money(res.gastosFijos)}</div></div><div class="kpi"><div class="l">Gastos variables</div><div class="v">${money(res.gastosVariables)}</div></div></div>` +
+    `<div class="two"><div>${searchBox('gas', 'Buscar gasto…')}<div style="height:10px"></div>${tbl(['Fecha', 'Concepto', 'Categoría', 'Tipo', 'Pagado con', ['Monto', 'num'], ''], rows, { id: 'tGas', foot: `<tr><td colspan="5">Total</td><td class="num">${money(res.gastosOp)}</td><td></td></tr>`, empty: 'No hay gastos en este período.' })}</div>
+      <div class="chart"><h3>Gastos por categoría</h3>${hbarChart(cat.map(([l, v]) => ({ label: l, v })), { cls: 'bar-yel' })}</div></div>`;
+};
+
+/* ---------- Ajustes y devoluciones ---------- */
+views.ajustes = function () {
+  const tab = ui.tab.aj || 'dev'; const [a, b] = range();
+  const devs = R.devs.filter(d => inRange(d.fecha, a, b)).sort((x, y) => y.fecha.localeCompare(x.fecha));
+  const dRows = devs.map(d => `<tr><td>${fdate(d.fecha)}</td><td>${d.tipo === 'venta' ? badge('De venta', 'info') : badge('De compra', 'warn')}</td><td>${esc(d.tipo === 'venta' ? d.v.operacion : d.c.factura)}</td><td>${esc(d.codigo)} · ${esc((R.P[d.codigo] || {}).nombre || '')}</td><td class="num">${qty(d.cant)}</td><td class="num">${money(d.total)}</td><td>${esc(d.destino)}</td><td>${esc(d.motivo || '')}</td><td class="noprint">${btn('dev-del', 'Borrar', { id: d.id }, 'danger sm')}</td></tr>`);
+  const ajs = R.ajs.filter(x => inRange(x.fecha, a, b)).sort((x, y) => y.fecha.localeCompare(x.fecha));
+  const aRows = ajs.map(x => `<tr><td>${fdate(x.fecha)}</td><td>${x.tipo === 'Ajuste por conteo' ? badge(x.tipo, 'info') : badge(x.tipo, 'bad')}</td><td>${esc(x.codigo)} · ${esc((R.P[x.codigo] || {}).nombre || '')}</td><td class="num ${cls(x.cant)}">${qty(x.cant)}</td><td class="num ${cls(-x.loss)}">${money(x.cost)}</td><td>${esc(x.motivo || '')}</td><td class="noprint">${btn('aj-del', 'Borrar', { id: x.id }, 'danger sm')}</td></tr>`);
+  return pageH('Ajustes, pérdidas y devoluciones', 'Todo lo que cambia el inventario sin ser una compra ni una venta normal.', btn('dev-new', '+ Devolución', {}, 'sec') + btn('aj-new', '+ Merma / ajuste')) +
+    howto('<b>Devolución:</b> un cliente te devuelve algo (baja la venta y la mercancía regresa) o tú devuelves algo a un suplidor (baja la compra y tu deuda). <b>Merma:</b> mercancía dañada, vencida o perdida; sale del inventario y se cuenta como pérdida. Siempre indica el motivo.') + periodBar() +
+    `<div class="bar noprint"><button class="btn ${tab === 'dev' ? '' : 'sec'}" data-act="tab" data-k="aj" data-v="dev">Devoluciones (${devs.length})</button><button class="btn ${tab === 'aj' ? '' : 'sec'}" data-act="tab" data-k="aj" data-v="aj">Mermas y ajustes (${ajs.length})</button></div>` +
+    (tab === 'dev' ? tbl(['Fecha', 'Tipo', 'Documento', 'Producto', ['Cant.', 'num'], ['Valor', 'num'], 'Destino', 'Motivo', ''], dRows, { empty: 'No hay devoluciones en este período.' })
+      : tbl(['Fecha', 'Tipo', 'Producto', ['Cantidad', 'num'], ['Costo', 'num'], 'Motivo', ''], aRows, { empty: 'No hay mermas ni ajustes en este período.' }));
+};
+
+/* ---------- 11. Estado de resultados ---------- */
+views.resultados = function () {
+  const [a, b] = range(); const r = MNI.resultados(S, R, a, b);
+  const row = (l, v, c, ind) => `<tr class="${c || ''}"><td class="${ind ? 'ind' : ''}">${l}</td><td class="num ${c ? cls(v) : ''}">${money(v)}</td></tr>`;
+  const tipo = S.gastos.length ? Object.entries(r.porCat).sort((x, y) => y[1] - x[1]).map(([k, v]) => row(esc(k), v, '', 1)).join('') : '';
+  return pageH('Estado de resultados', 'Cuánto ganaste de verdad en el período.', btn('print', 'Imprimir', {}, 'sec')) +
+    howto('Este estado se arma solo. La <b>utilidad</b> sale de aquí (ventas − costo de ventas − gastos); nunca de restar lo que tienes menos lo que debes. Los retiros del dueño no aparecen porque no son gastos.') + periodBar() +
+    `<div class="two"><div class="card"><table class="stmt"><tbody>
+      ${row('Ventas brutas', r.ventasBrutas)}${row('(−) Descuentos sobre ventas', -r.descVentas, '', 1)}${row('(−) Devoluciones de ventas', -r.devVentas, '', 1)}${row('(=) VENTAS NETAS', r.ventasNetas, 'sub')}
+      ${row('Inventario inicial', r.invIni, '', 1)}${row('(+) Compras brutas', r.comprasBrutas, '', 1)}${row('(−) Descuentos recibidos', -r.descCompras, '', 1)}${row('(+) Costos adicionales (fletes)', r.adicionales, '', 1)}${row('(−) Devoluciones de compras', -r.devCompras, '', 1)}${row('(−) Inventario final', -r.invFin, '', 1)}
+      ${row('(−) COSTO DE VENTAS', -r.costoVentas, 'sub')}${row('(=) BENEFICIO BRUTO', r.beneficioBruto, 'sub')}
+      ${row('(−) Gastos operativos', -r.gastosOp)}${tipo}${row('(=) RESULTADO OPERATIVO', r.resultadoOp, 'sub')}
+      ${row('(+) Otros ingresos', r.otrosIngresos)}${row('(−) Otros gastos', -r.otrosGastos)}${row('(−) Impuestos aplicables (registrados)', -r.impuestos)}${row('(=) RESULTADO NETO DEL PERÍODO', r.resultadoNeto, 'tot')}
+    </tbody></table></div>
+    <div><div class="card"><h2>Lectura rápida</h2><p>Margen bruto: <b>${pct(r.margenBruto)}</b><br>Gastos sobre ventas: <b>${r.ventasNetas ? pct(r.gastosOp / r.ventasNetas) : '0.00%'}</b><br>Utilidad sobre ventas: <b class="${cls(r.resultadoNeto)}">${r.ventasNetas ? pct(r.resultadoNeto / r.ventasNetas) : '0.00%'}</b><br>Gastos fijos: <b>${money(r.gastosFijos)}</b> · variables: <b>${money(r.gastosVariables)}</b></p></div>
+      <div class="card"><h2>Control del costo de ventas</h2><p class="muted" style="margin-top:0">Se calcula de dos formas y deben coincidir.</p><table class="stmt"><tbody>${row('Por fórmula (inv. inicial + compras − inv. final)', r.costoVentas)}${row('Costo de lo vendido (neto de devoluciones)', r.cmvVendido, '', 1)}${row('Mermas: dañado, vencido, perdido', r.perdidas, '', 1)}${row('Ajustes por conteo físico', r.ajConteo, '', 1)}${row('Diferencia', r.difControl, Math.abs(r.difControl) < 0.05 ? 'sub' : 'tot')}</tbody></table>
+      ${Math.abs(r.difControl) < 0.05 ? notice('<b>Coincide.</b> Las pérdidas e inventario están bien contabilizados.', 'ok') : notice('Hay una diferencia: revisa fechas de compras y ventas.', 'bad')}</div></div></div>` +
+    (S.config.itbis.activo ? notice('Valores <b>sin ITBIS</b>: el impuesto se separa del valor de compras y ventas y no afecta tu utilidad.', 'warn') : '');
+};
+
+/* ---------- 12. Resumen financiero ---------- */
+views.resumen = function () {
+  const [, b0] = range(); const h = hoyStr(); const b = b0 > h ? (period.preset === 'mes' || period.preset === 'anio' ? h : b0) : b0; const bal = MNI.balance(S, R, b, h); const res = MNI.resultados(S, R, range()[0], b);
+  const row = (l, v, c, ind) => `<tr class="${c || ''}"><td class="${ind ? 'ind' : ''}">${l}</td><td class="num ${cls(v)}">${money(v)}</td></tr>`;
+  return pageH('Resumen financiero', 'Qué tienes, qué debes y qué es tuyo, al ' + fdate(b) + '.', btn('print', 'Imprimir', {}, 'sec')) +
+    howto('Esta es una <b>foto</b> de tu colmado en una fecha. <b>Activos</b> = lo que tienes; <b>Pasivos</b> = lo que debes; <b>Patrimonio</b> = lo que queda para ti. Siempre debe cumplirse: Activos = Pasivos + Patrimonio.') + periodBar() +
+    notice(bal.cuadra ? '<b>La ecuación contable cuadra:</b> ' + money(bal.activos) + ' = ' + money(bal.pasivos) + ' + ' + money(bal.patrimonio) : '<b>NO CUADRA.</b> Diferencia de ' + money(bal.diferencia) + '. Revisa registros duplicados o con fecha equivocada.', bal.cuadra ? 'ok' : 'bad') +
+    `<div class="two"><div class="card"><h2>Activos (lo que tengo)</h2><table class="stmt"><tbody>${row('Efectivo en caja', bal.caja, '', 1)}${row('Bancos', bal.banco, '', 1)}${row('Cuentas por cobrar', bal.cxc, '', 1)}${row('Inventario', bal.inventario, '', 1)}${row('Equipos y mobiliario', bal.equipos, '', 1)}${bal.itbisFavor ? row('ITBIS a favor', bal.itbisFavor, '', 1) : ''}${row('TOTAL ACTIVOS', bal.activos, 'tot')}</tbody></table></div>
+    <div><div class="card"><h2>Pasivos (lo que debo)</h2><table class="stmt"><tbody>${row('Cuentas por pagar (suplidores)', bal.cxp, '', 1)}${row('Préstamos', bal.prestamos, '', 1)}${bal.itbisPagar ? row('ITBIS por pagar', bal.itbisPagar, '', 1) : ''}${row('TOTAL PASIVOS', bal.pasivos, 'sub')}</tbody></table></div>
+    <div class="card"><h2>Patrimonio (lo que es mío)</h2><table class="stmt"><tbody>${row('Capital inicial', bal.capitalInicial, '', 1)}${row('(+) Aportes del dueño', bal.aportes, '', 1)}${row('(+) Utilidad acumulada', bal.utilidadAcum, '', 1)}${row('(−) Retiros del dueño', -bal.retiros, '', 1)}${row('TOTAL PATRIMONIO', bal.patrimonio, 'sub')}${row('PASIVOS + PATRIMONIO', bal.pasivos + bal.patrimonio, 'tot')}</tbody></table></div></div></div>` +
+    `<div class="card"><h2>No confundas el balance con los resultados</h2><p>El <b>resultado del período</b> (${fdate(range()[0])} al ${fdate(b)}) es <b class="${cls(res.resultadoNeto)}">${money(res.resultadoNeto)}</b>: lo que ganaste en esas fechas. El <b>patrimonio</b> es la foto acumulada: incluye tu capital, tus aportes, todas las utilidades y descuenta tus retiros. El inventario y las cuentas por cobrar <b>no son dinero disponible</b>. El capital inicial se calcula con los saldos con que empezaste (Parámetros y datos).</p></div>`;
+};
+
+/* ---------- 13. Conteo físico ---------- */
+views.conteo = function () {
+  const f = S.conteo.fecha || (hoyStr()); const blind = !!ui.blind;
+  const inv = MNI.inventarioResumen(S, R, MNI.BEGIN, f).filter(x => x.estado !== 'Inactivo');
+  let totDif = 0, nDif = 0;
+  const rows = inv.map(x => {
+    const it = S.conteo.items[x.codigo] || {}; const fis = it.fisica; const has = fis !== undefined && fis !== '' && fis !== null;
+    const dif = has ? Number(fis) - x.existencia : 0; const cu = MNI.avgCost(R, x.codigo, f); const vd = MNI.r2(dif * cu);
+    if (has) { totDif += vd; if (Math.abs(dif) > 1e-9) nDif++; }
+    return `<tr><td><b>${esc(x.codigo)}</b></td><td>${esc(x.nombre)}</td><td class="num reg">${qty(x.existencia)}</td><td class="num"><input type="number" step="any" min="0" class="cinp" data-cod="${esc(x.codigo)}" value="${has ? esc(fis) : ''}" style="width:96px;text-align:right" aria-label="Cantidad física de ${esc(x.nombre)}"></td>
+      <td class="num ${cls(dif)}">${has ? qty(dif) : ''}</td><td class="num">${nf(cu, 2)}</td><td class="num ${cls(vd)}">${has ? money(vd) : ''}</td><td><input class="cobs" data-cod="${esc(x.codigo)}" value="${esc(it.obs || '')}" style="width:100%;min-width:120px" aria-label="Observación"></td></tr>`;
+  });
+  return pageH('Conteo físico', 'Compara lo que dice el sistema con lo que realmente hay en los estantes.', btn('print', 'Imprimir hoja', {}, 'sec') + btn('conteo-apply', 'Aplicar diferencias al inventario') + btn('conteo-clear', 'Limpiar conteo', {}, 'danger')) +
+    howto('1) Elige la fecha del conteo. 2) <b>Imprime la hoja</b> (puedes ocultar la cantidad registrada para contar a ciegas) o cuenta con el celular. 3) Escribe la <b>cantidad física</b> de cada producto. 4) Revisa las diferencias, investiga el porqué y luego toca <b>Aplicar diferencias</b>: se crean ajustes y el inventario queda igual a lo contado.') +
+    `<div class="bar noprint"><label for="cfecha"><b>Fecha del conteo</b></label><input type="date" id="cfecha" value="${esc(f)}" data-cfecha> <label><input type="checkbox" id="blind" ${blind ? 'checked' : ''}> Ocultar cantidad registrada al imprimir</label></div>` +
+    `<div class="${blind ? 'hide-reg' : ''}">${tbl(['Código', 'Producto', ['Cantidad registrada', 'num'], ['Cantidad física', 'num'], ['Diferencia', 'num'], ['Costo unit.', 'num'], ['Valor diferencia', 'num'], 'Observaciones'], rows, { id: 'tConteo', foot: `<tr><td colspan="6">${nDif} productos con diferencia</td><td class="num ${cls(totDif)}">${money(totDif)}</td><td></td></tr>` })}</div>`;
+};
+
+/* ---------- 14. Alertas ---------- */
+views.alertas = function () {
+  const al = MNI.alertas(S, R, hoyStr());
+  const items = al.map(x => `<div class="alert ${x.nivel}"><h3>${esc(x.titulo)} ${badge(x.cant + (x.cant === 1 ? ' caso' : ' casos'), x.nivel === 'alta' ? 'bad' : 'warn')} ${x.nivel === 'alta' ? badge('Prioridad alta', 'bad') : ''}</h3>
+    <ul>${x.detalle.slice(0, 12).map(d => `<li>${esc(d)}</li>`).join('')}${x.detalle.length > 12 ? `<li class="muted">… y ${x.detalle.length - 12} más</li>` : ''}</ul><div class="rev"><b>Qué revisar:</b> ${esc(x.revisar)}</div></div>`).join('');
+  return pageH('Alertas y recomendaciones', 'Lo que el sistema detectó y lo que debes revisar.') +
+    howto('Las alertas se actualizan solas. Empieza por las de <b>prioridad alta</b>. Cada una dice qué revisar. Cuando corrijas el problema, desaparece.') +
+    (al.length ? items : notice('<b>Todo en orden.</b> No hay alertas en este momento.', 'ok'));
+};
+
+/* ---------- Parámetros ---------- */
+views.config = function () {
+  const c = S.config; const it = c.itbis; const bal = MNI.balance(S, R, MNI.END, hoyStr());
+  const f = (id, l, v, t, extra) => `<div class="f"><label for="${id}">${l}</label><input id="${id}" type="${t || 'text'}" ${t === 'number' ? 'step="0.01"' : ''} value="${esc(v)}" ${extra || ''}></div>`;
+  return pageH('Parámetros y datos', 'Datos del colmado, saldos iniciales, ITBIS opcional y respaldo.') +
+    howto('Escribe aquí con cuánto empiezas. Estos saldos forman tu <b>capital inicial</b>. <b>Haz un respaldo</b> de vez en cuando: los datos se guardan en este navegador.') +
+    `<div class="card"><h2>Datos del colmado y saldos iniciales</h2><div class="fg">${f('c_negocio', 'Nombre del colmado', c.negocio)}${f('c_prop', 'Propietario', c.propietario)}${f('c_inicio', 'Fecha de inicio del control', c.fechaInicio, 'date')}
+      ${f('c_caja', 'Efectivo en caja al empezar (RD$)', c.cajaInicial, 'number', 'min="0"')}${f('c_banco', 'Saldo en banco al empezar (RD$)', c.bancoInicial, 'number', 'min="0"')}${f('c_equipos', 'Equipos y mobiliario (valor RD$)', c.equipos, 'number', 'min="0"')}
+      ${f('c_vence', 'Avisar vencimiento de productos (días antes)', c.diasAlertaVence, 'number', 'min="0"')}${f('c_pago', 'Avisar facturas por vencer (días antes)', c.diasAlertaPago, 'number', 'min="0"')}</div>
+      <p class="muted">Capital inicial calculado: <b>${money(bal.capitalInicial)}</b> (caja + banco + inventario inicial + equipos + fiaos anteriores − deudas anteriores).</p>
+      <div class="bar">${btn('cfg-save', 'Guardar parámetros')}</div></div>` +
+    `<div class="card"><h2>ITBIS (opcional)</h2><p class="muted" style="margin-top:0">Si tus facturas y precios traen ITBIS, actívalo y el sistema separa el impuesto del valor del producto, para que costo, margen y utilidad se calculen <b>sin ITBIS</b>. Es una ayuda de control interno: <b>no declara ITBIS ni sustituye tu declaración ante la DGII</b>. Las tasas las defines tú; confírmalas con la DGII o tu contador.</p>
+      <div class="fg"><div class="f"><label><input type="checkbox" id="i_act" ${it.activo ? 'checked' : ''}> Activar manejo de ITBIS</label></div><div class="f"><label><input type="checkbox" id="i_inc" ${it.incluido ? 'checked' : ''}> Mis precios y costos <b>ya incluyen</b> ITBIS</label></div>
+      ${f('i_gen', 'Tasa general (%)', it.tasaGeneral, 'number')}${f('i_red', 'Tasa reducida (%)', it.tasaReducida, 'number')}</div>
+      ${it.activo ? `<p>ITBIS por pagar / (a favor) acumulado: <b>${money(MNI.itbisBalance(R, MNI.END))}</b>. Usa <i>Caja y bancos → Pago de ITBIS</i> cuando lo pagues.</p>` : ''}
+      <p class="muted">Cada producto tiene su tratamiento (general, reducida o exento). Cambiar esto reinterpreta tus costos: hazlo antes de registrar movimientos.</p><div class="bar">${btn('itbis-save', 'Guardar ITBIS')}</div></div>` +
+    `<div class="card"><h2>Listas de opciones</h2><div class="fg"><div class="f full"><label for="l_cat">Categorías de productos (separadas por coma)</label><textarea id="l_cat" rows="2">${esc(c.categorias.join(', '))}</textarea></div><div class="f full"><label for="l_uni">Unidades de medida (separadas por coma)</label><textarea id="l_uni" rows="2">${esc(c.unidades.join(', '))}</textarea></div></div><div class="bar">${btn('list-save', 'Guardar listas')}</div></div>` +
+    `<div class="card"><h2>Respaldo y datos</h2><div class="bar">${btn('backup', 'Descargar respaldo', {}, 'navy')}<label class="btn sec" style="cursor:pointer">Cargar respaldo<input type="file" id="restore" accept=".json,application/json" style="display:none"></label>${btn('demo', 'Cargar datos de demostración', {}, 'sec')}${btn('reset', 'Borrar todos los datos', {}, 'danger')}</div>
+      <p class="muted">${storageOK ? 'Los datos se guardan automáticamente en este navegador, en esta computadora o teléfono. Si borras los datos del navegador, se pierden: por eso conviene descargar un respaldo.' : '<b class="neg">Este navegador no permite guardar datos.</b> Descarga un respaldo antes de cerrar.'}</p></div>` +
+    `<div class="card"><h2>Acerca de</h2><p><b>Mi Negocio Inteligente</b> · NÚMEROS Y NEGOCIOS RD. Herramienta educativa y de control interno, con costo promedio ponderado móvil. <b>No es un sistema fiscal ni contable certificado</b> y no sustituye la asesoría de un contador ni tus obligaciones ante la DGII.</p></div>`;
+};
+
+/* ============================================================
+   INTERFAZ · formularios, acciones, validaciones y arranque
+   ============================================================ */
+
+/* ---------- avisos y ventanas ---------- */
+function toast(msg, bad) {
+  const t = document.createElement('div'); t.className = 'toast' + (bad ? ' bad' : ''); t.setAttribute('role', 'status'); t.textContent = msg;
+  $('#toastRoot').appendChild(t); setTimeout(() => t.remove(), bad ? 6000 : 3200);
+}
+function closeModal() { $('#modalRoot').innerHTML = ''; }
+function openShell(o) {
+  $('#modalRoot').innerHTML = `<div class="modal-bg"><div class="modal ${o.wide ? 'wide' : ''}" role="dialog" aria-modal="true" aria-label="${esc(o.title)}"><header><h2>${esc(o.title)}</h2><button class="x" type="button" data-act="close" aria-label="Cerrar">×</button></header>
+    <form id="mform" novalidate><div class="body">${o.body}<div class="err" id="merr" hidden></div></div><footer><button type="button" class="btn sec" data-act="close">${o.noOk ? 'Cerrar' : 'Cancelar'}</button>${o.noOk ? '' : `<button type="submit" class="btn" id="mok">${o.ok || 'Guardar'}</button>`}</footer></form></div></div>`;
+  const form = $('#mform');
+  form.addEventListener('submit', async ev => {
+    ev.preventDefault(); const eb = $('#merr'); eb.hidden = true;
+    const bt = $('#mok'); if (bt) bt.disabled = true;
+    try {
+      const r = await o.onSubmit(form);
+      if (typeof r === 'string' && r) { eb.textContent = r; eb.hidden = false; eb.scrollIntoView({ block: 'nearest' }); }
+      else if (r !== false) closeModal();
+    } catch (e) { console.error(e); eb.textContent = 'Ocurrió un error: ' + e.message; eb.hidden = false; }
+    if (bt) bt.disabled = false;
+  });
+  if (o.onOpen) o.onOpen(form);
+  const first = form.querySelector('input:not([readonly]):not([type=hidden]),select'); if (first && !o.noFocus) first.focus();
+  return form;
+}
+function fieldHTML(f) {
+  const id = 'ff_' + f.n; const v = f.v === undefined || f.v === null ? '' : f.v; let ctl;
+  if (f.t === 'select') ctl = `<select id="${id}" name="${f.n}">${(f.opts || []).map(o => { const [val, lab] = Array.isArray(o) ? o : [o, o]; return `<option value="${esc(val)}" ${String(val) === String(v) ? 'selected' : ''}>${esc(lab)}</option>`; }).join('')}</select>`;
+  else if (f.t === 'textarea') ctl = `<textarea id="${id}" name="${f.n}" rows="2">${esc(v)}</textarea>`;
+  else ctl = `<input id="${id}" name="${f.n}" type="${f.t || 'text'}" value="${esc(v)}" ${f.t === 'number' ? `step="${f.step || 'any'}" ${f.min !== undefined ? `min="${f.min}"` : ''}` : ''} ${f.ph ? `placeholder="${esc(f.ph)}"` : ''} ${f.ro ? 'readonly' : ''} ${f.list ? `list="${f.list}"` : ''} autocomplete="off">`;
+  return `<div class="f ${f.full ? 'full' : ''}" data-fw="${f.n}"><label for="${id}">${esc(f.l)}${f.req ? ' *' : ''}</label>${ctl}${f.help ? `<small>${f.help}</small>` : ''}</div>`;
+}
+function openForm(o) {
+  return openShell({
+    title: o.title, ok: o.ok, wide: o.wide, onOpen: o.onOpen,
+    body: (o.intro ? `<p class="muted" style="margin-top:0">${o.intro}</p>` : '') + `<div class="fg">${o.fields.map(fieldHTML).join('')}</div>${o.extra || ''}`,
+    onSubmit: async form => {
+      const vals = {};
+      for (const f of o.fields) {
+        const el = form.elements[f.n]; if (!el) continue;
+        let v = el.value; if (f.t === 'number') v = v === '' ? NaN : parseFloat(v); else v = String(v).trim();
+        vals[f.n] = v;
+        if (f.req && (v === '' || (f.t === 'number' && isNaN(v)))) return 'Falta completar: ' + f.l + '.';
+        if (f.t === 'number' && !isNaN(v) && f.min !== undefined && v < f.min) return f.l + ' no puede ser menor que ' + f.min + '.';
+      }
+      return o.onSubmit(vals, form);
+    },
+  });
+}
+function confirmBox(msg, o) {
+  o = o || {};
+  return new Promise(res => {
+    const root = $('#confirmRoot');
+    root.innerHTML = `<div class="modal-bg" style="z-index:80"><div class="modal" role="alertdialog" aria-modal="true" style="max-width:480px"><header><h2>${esc(o.title || 'Confirmar')}</h2></header><div class="body"><p style="margin:0;white-space:pre-line">${msg}</p></div><footer><button class="btn sec" data-c="0">${o.no || 'Cancelar'}</button><button class="btn ${o.danger ? 'danger' : ''}" data-c="1" id="cbOk">${o.ok || 'Aceptar'}</button></footer></div></div>`;
+    const done = v => { root.innerHTML = ''; document.removeEventListener('keydown', kd, true); res(v); };
+    const kd = e => { if (e.key === 'Escape') { e.stopPropagation(); done(false); } };
+    document.addEventListener('keydown', kd, true);
+    root.querySelectorAll('[data-c]').forEach(b => b.addEventListener('click', () => done(b.dataset.c === '1')));
+    $('#cbOk').focus();
+  });
+}
+
+/* ---------- aplicar cambios con validaciones ---------- */
+function checkDocs(S2, R2) {
+  const h = hoyStr();
+  for (const t of ['cxp', 'cxc']) {
+    const bad = MNI.docsAt(S2, R2, t, MNI.END, h).find(d => d.saldo < -0.005);
+    if (bad) return 'Este movimiento deja un saldo negativo (' + money(bad.saldo) + ') en ' + (t === 'cxp' ? 'la factura ' + bad.factura + ' de ' + bad.suplidor : 'la operación ' + bad.operacion) + '. Revisa los montos.';
+  }
+  if (R2.errors.length > R.errors.length) return 'El registro es inconsistente: ' + R2.errors[R2.errors.length - 1];
+  return '';
+}
+async function apply(mutate, o) {
+  o = o || {};
+  const S2 = clone(S); const r = mutate(S2); if (typeof r === 'string') return r;
+  const R2 = MNI.compute(S2); const err = checkDocs(S2, R2); if (err) return err;
+  let autorizada = false;
+  if (o.guardNeg !== false) {
+    const nn = MNI.newNegatives(MNI.negSummary(R), MNI.negSummary(R2));
+    if (nn.length) {
+      const lines = nn.map(n => '• ' + n.codigo + ' ' + ((R2.P[n.codigo] || {}).nombre || '') + ': quedaría en ' + qty(n.q)).join('\n');
+      const ok = await confirmBox('<b>Advertencia: existencia negativa.</b>\nEste movimiento dejaría el inventario por debajo de cero:\n' + lines + '\n\nNo se puede tener menos de cero. Normalmente significa que falta registrar una compra, o que la fecha está mal.\n\n¿Autorizas registrarlo de todas formas? Quedará marcado y aparecerá en las alertas hasta que lo corrijas.', { title: 'Existencia negativa', ok: 'Autorizo registrarlo', no: 'Volver y corregir', danger: true });
+      if (!ok) return false; autorizada = true;
+    }
+  }
+  if (autorizada && o.mark) o.mark(S2);
+  S = S2; recompute(); saveState(); render(); if (o.msg) toast(o.msg);
+}
+const uniq = (arr, f) => { const s = new Set(); return arr.filter(x => { const k = f(x); if (s.has(k)) return false; s.add(k); return true; }); };
+
+/* ---------- productos ---------- */
+function prodForm(code) {
+  const p = code ? S.productos.find(x => x.codigo === code) : null; const c = S.config;
+  const cats = uniq(c.categorias.concat(p ? [p.categoria] : []), x => x).filter(Boolean), unis = uniq(c.unidades.concat(p ? [p.unidad] : []), x => x).filter(Boolean);
+  const fields = [
+    { n: 'codigo', l: 'Código', req: 1, v: p ? p.codigo : '', ro: !!p, help: p ? 'El código no se puede cambiar.' : 'Corto y único, por ejemplo ARR01' },
+    { n: 'nombre', l: 'Nombre del producto', req: 1, v: p ? p.nombre : '' },
+    { n: 'categoria', l: 'Categoría', t: 'select', opts: cats, v: p ? p.categoria : cats[0] },
+    { n: 'unidad', l: 'Unidad de medida', t: 'select', opts: unis, v: p ? p.unidad : unis[0] },
+    { n: 'suplidor', l: 'Suplidor habitual', t: 'select', opts: [['', '(ninguno)']].concat(S.suplidores.map(s => s.nombre)), v: p ? p.suplidor : '' },
+    { n: 'existencia', l: 'Existencia inicial', t: 'number', min: 0, req: 1, v: p ? p.existencia : 0, help: 'Lo que tienes hoy en el estante' },
+    { n: 'costo', l: 'Costo unitario (RD$)', t: 'number', min: 0, req: 1, v: p ? p.costo : '', help: c.itbis.activo && c.itbis.incluido ? 'Con ITBIS incluido' : '' },
+    { n: 'precio', l: 'Precio de venta (RD$)', t: 'number', min: 0, req: 1, v: p ? p.precio : '', help: c.itbis.activo && c.itbis.incluido ? 'Con ITBIS incluido' : '' },
+    { n: 'minimo', l: 'Existencia mínima', t: 'number', min: 0, v: p ? p.minimo : 0, help: 'Cuando baje de aquí, el sistema te avisa' },
+    { n: 'vence', l: 'Fecha de vencimiento (si aplica)', t: 'date', v: p ? p.vence : '' },
+    { n: 'estado', l: 'Estado', t: 'select', opts: ['Activo', 'Inactivo'], v: p ? p.estado : 'Activo' },
+  ];
+  if (c.itbis.activo) fields.push({ n: 'itbis', l: 'Tratamiento de ITBIS', t: 'select', opts: [['general', 'General (' + c.itbis.tasaGeneral + '%)'], ['reducida', 'Reducida (' + c.itbis.tasaReducida + '%)'], ['exento', 'Exento']], v: p ? p.itbis : 'general', help: 'Confírmalo con la DGII o tu contador' });
+  openForm({
+    title: p ? 'Editar producto' : 'Nuevo producto', fields,
+    onSubmit: async v => {
+      v.codigo = v.codigo.toUpperCase().replace(/\s+/g, '');
+      if (!p && S.productos.some(x => x.codigo === v.codigo)) return 'Ese código ya existe. Usa otro.';
+      if (v.precio < v.costo && !(await confirmBox('El precio de venta (' + money(v.precio) + ') es <b>menor que el costo</b> (' + money(v.costo) + '). Venderías este producto perdiendo dinero. ¿Guardar así?', { ok: 'Guardar así', no: 'Corregir' }))) return false;
+      return apply(s => {
+        const obj = { codigo: v.codigo, nombre: v.nombre, categoria: v.categoria, unidad: v.unidad, suplidor: v.suplidor, existencia: v.existencia, costo: v.costo, precio: v.precio, minimo: isNaN(v.minimo) ? 0 : v.minimo, vence: v.vence, estado: v.estado, itbis: v.itbis || (p && p.itbis) || 'general' };
+        if (p) s.productos[s.productos.findIndex(x => x.codigo === p.codigo)] = obj; else s.productos.push(obj);
+      }, { msg: p ? 'Producto actualizado' : 'Producto agregado', guardNeg: !!p });
+    },
+  });
+}
+
+/* ---------- suplidores ---------- */
+function supForm(id) {
+  const s0 = id ? S.suplidores.find(x => x.id === id) : null;
+  openForm({
+    title: s0 ? 'Editar suplidor' : 'Nuevo suplidor',
+    fields: [{ n: 'nombre', l: 'Nombre del suplidor', req: 1, v: s0 ? s0.nombre : '' }, { n: 'rnc', l: 'RNC o cédula (si aplica)', v: s0 ? s0.rnc : '' }, { n: 'telefono', l: 'Teléfono', v: s0 ? s0.telefono : '' }, { n: 'contacto', l: 'Persona de contacto', v: s0 ? s0.contacto : '' },
+      { n: 'direccion', l: 'Dirección', v: s0 ? s0.direccion : '', full: 1 }, { n: 'dias', l: 'Días de crédito que te da', t: 'number', min: 0, v: s0 ? s0.dias : 0, help: '0 = solo contado' }],
+    onSubmit: v => {
+      if (S.suplidores.some(x => x.nombre.toLowerCase() === v.nombre.toLowerCase() && (!s0 || x.id !== s0.id))) return 'Ya existe un suplidor con ese nombre.';
+      return apply(s => {
+        if (s0) { const o = s.suplidores.find(x => x.id === s0.id); const old = o.nombre; Object.assign(o, v, { dias: isNaN(v.dias) ? 0 : v.dias });
+          if (old !== v.nombre) { s.compras.forEach(c => { if (c.suplidor === old) c.suplidor = v.nombre; }); s.cxpIni.forEach(c => { if (c.suplidor === old) c.suplidor = v.nombre; }); s.productos.forEach(p => { if (p.suplidor === old) p.suplidor = v.nombre; }); } }
+        else s.suplidores.push({ id: MNI.nextId(s), ...v, dias: isNaN(v.dias) ? 0 : v.dias });
+      }, { msg: 'Suplidor guardado', guardNeg: false });
+    },
+  });
+}
+
+/* ---------- compras y ventas (documentos con varias líneas) ---------- */
+function docForm(kind) {
+  const isC = kind === 'compra'; const h = hoyStr();
+  const prods = S.productos.filter(p => p.estado !== 'Inactivo');
+  if (!prods.length) return toast('Primero registra al menos un producto.', true);
+  if (isC && !S.suplidores.length) return toast('Primero registra al menos un suplidor.', true);
+  const po = '<option value="">Elegir producto…</option>' + prods.map(p => `<option value="${esc(p.codigo)}" data-costo="${p.costo}" data-precio="${p.precio}">${esc(p.codigo)} · ${esc(p.nombre)}</option>`).join('');
+  const lrow = () => `<tr class="lrow"><td style="min-width:200px" data-l="Producto"><select name="codigo" aria-label="Producto">${po}</select><small class="disp muted"></small></td><td data-l="Cantidad"><input name="cant" type="number" step="any" min="0" style="min-width:70px" aria-label="Cantidad"></td>
+    <td data-l="${isC ? 'Costo unit.' : 'Precio unit.'}"><input name="${isC ? 'costo' : 'precio'}" type="number" step="0.01" min="0" style="min-width:84px" aria-label="${isC ? 'Costo unitario' : 'Precio unitario'}"></td><td data-l="Descuento (RD$)"><input name="descuento" type="number" step="0.01" min="0" style="min-width:76px" aria-label="Descuento"></td>
+    ${isC ? '<td data-l="Flete u otros (RD$)"><input name="adicional" type="number" step="0.01" min="0" style="min-width:76px" aria-label="Costos adicionales"></td>' : ''}<td class="t">0.00</td><td><button type="button" class="btn danger sm" data-act="line-del" aria-label="Quitar línea">Quitar</button></td></tr>`;
+  const nOp = MNI.nextOperacion(S);
+  const clientes = uniq(R.ventas.map(v => v.cliente).concat(S.cxcIni.map(x => x.cliente)).filter(Boolean), x => x);
+  const head = isC ? `<div class="fg"><div class="f"><label for="d_fecha">Fecha *</label><input id="d_fecha" name="fecha" type="date" value="${h}"></div><div class="f"><label for="d_fact">Número de factura *</label><input id="d_fact" name="factura" autocomplete="off"></div>
+      <div class="f"><label for="d_sup">Suplidor *</label><select id="d_sup" name="suplidor">${S.suplidores.map(s => `<option data-dias="${s.dias || 0}">${esc(s.nombre)}</option>`).join('')}</select></div>
+      <div class="f"><label for="d_forma">Forma de pago *</label><select id="d_forma" name="forma"><option>Contado</option><option>Crédito</option></select></div>
+      <div class="f f-medio"><label for="d_medio">Se pagó con</label><select id="d_medio" name="medio"><option>Efectivo</option><option>Banco</option></select></div>
+      <div class="f f-venc" hidden><label for="d_venc">Vence el *</label><input id="d_venc" name="vencimiento" type="date"></div></div>`
+    : `<div class="fg"><div class="f"><label for="d_fecha">Fecha *</label><input id="d_fecha" name="fecha" type="date" value="${h}"></div><div class="f"><label for="d_op">Número de operación *</label><input id="d_op" name="operacion" value="${nOp}" autocomplete="off"></div>
+      <div class="f"><label for="d_forma">Forma de cobro *</label><select id="d_forma" name="forma"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta</option><option>Crédito</option></select></div>
+      <div class="f f-cli" hidden><label for="d_cli">Cliente *</label><input id="d_cli" name="cliente" list="dl_cli" autocomplete="off"><datalist id="dl_cli">${clientes.map(c => `<option value="${esc(c)}">`).join('')}</datalist></div>
+      <div class="f f-venc" hidden><label for="d_venc">Debe pagar el *</label><input id="d_venc" name="vencimiento" type="date" value="${MNI.addDays(h, 15)}"></div></div>`;
+  const body = head + `<div class="tw" style="margin-top:12px"><table class="lines"><thead><tr><th>Producto</th><th>Cantidad</th><th>${isC ? 'Costo unit.' : 'Precio unit.'}</th><th>Descuento (RD$)</th>${isC ? '<th>Flete u otros (RD$)</th>' : ''}<th>Total línea</th><th></th></tr></thead><tbody id="lbody">${lrow()}${lrow()}</tbody></table></div>
+    <div class="bar" style="margin-top:8px"><button type="button" class="btn sec sm" data-act="line-add">+ Agregar línea</button><span class="grow"></span><span>Total estimado: <b id="dtot">${money(0)}</b></span></div>
+    <p class="muted" style="margin:6px 0 0;font-size:13px">${isC ? 'El descuento y el flete son montos totales de esa línea. El sistema reparte el costo real al producto.' : 'El descuento es el monto total rebajado en esa línea.'}${S.config.itbis.activo ? ' Escribe precios y costos ' + (S.config.itbis.incluido ? '<b>con</b>' : '<b>sin</b>') + ' ITBIS, como lo definiste en Parámetros.' : ''}</p>`;
+  const recalc = form => {
+    let tot = 0;
+    $$('.lrow', form).forEach(tr => {
+      const g = n => { const e = tr.querySelector('[name=' + n + ']'); return e ? parseFloat(e.value) || 0 : 0; };
+      const t = g('cant') * g(isC ? 'costo' : 'precio') - g('descuento') + g('adicional'); tot += t; tr.querySelector('.t').textContent = nf(t, 2);
+      const code = tr.querySelector('[name=codigo]').value; const d = tr.querySelector('.disp');
+      if (d) d.textContent = (!isC && code) ? 'Disponible: ' + qty(MNI.invAt(R, code, MNI.END).q) : '';
+    }); $('#dtot').textContent = money(tot);
+  };
+  openShell({
+    title: isC ? 'Registrar compra' : 'Registrar venta', body, wide: true, ok: 'Guardar ' + (isC ? 'compra' : 'venta'),
+    onOpen: form => {
+      const toggle = () => {
+        const f = form.elements.forma.value;
+        if (isC) { $('.f-medio', form).hidden = f !== 'Contado'; $('.f-venc', form).hidden = f !== 'Crédito'; if (f === 'Crédito' && !form.elements.vencimiento.value) { const o = form.elements.suplidor.selectedOptions[0]; form.elements.vencimiento.value = MNI.addDays(form.elements.fecha.value || h, parseInt(o.dataset.dias, 10) || 30); } }
+        else { $('.f-cli', form).hidden = f !== 'Crédito'; $('.f-venc', form).hidden = f !== 'Crédito'; }
+      };
+      form.addEventListener('change', e => {
+        if (e.target.name === 'forma' || e.target.name === 'suplidor' || e.target.name === 'fecha') { if (e.target.name !== 'forma' && isC) form.elements.vencimiento.value = ''; toggle(); }
+        if (e.target.name === 'codigo') { const o = e.target.selectedOptions[0], tr = e.target.closest('tr'); const inp = tr.querySelector('[name=' + (isC ? 'costo' : 'precio') + ']'); if (o && o.value && !inp.value) inp.value = isC ? o.dataset.costo : o.dataset.precio; }
+        recalc(form);
+      });
+      form.addEventListener('input', () => recalc(form)); toggle();
+    },
+    onSubmit: form => {
+      const g = n => form.elements[n] ? String(form.elements[n].value).trim() : '';
+      const fecha = g('fecha'); if (!fecha) return 'Falta la fecha.';
+      const lineas = []; const seen = new Set();
+      for (const tr of $$('.lrow', form)) {
+        const code = tr.querySelector('[name=codigo]').value; const rv = n => { const e = tr.querySelector('[name=' + n + ']'); return e && e.value !== '' ? parseFloat(e.value) : 0; };
+        const hasAny = code || rv('cant') || rv(isC ? 'costo' : 'precio'); if (!hasAny) continue;
+        if (!code) return 'Una línea no tiene producto.'; if (seen.has(code)) return 'El producto ' + code + ' está repetido. Junta las cantidades en una sola línea.'; seen.add(code);
+        const cant = rv('cant'), pr = rv(isC ? 'costo' : 'precio'), desc = rv('descuento'), adic = rv('adicional');
+        if (!(cant > 0)) return 'La cantidad de ' + code + ' debe ser mayor que cero.'; if (pr < 0) return 'El ' + (isC ? 'costo' : 'precio') + ' de ' + code + ' no puede ser negativo.';
+        if (desc < 0 || adic < 0) return 'Descuento y costos adicionales no pueden ser negativos.'; if (desc > cant * pr + 0.005) return 'El descuento de ' + code + ' es mayor que el valor de la línea.';
+        lineas.push(isC ? { codigo: code, cant, costo: pr, descuento: desc, adicional: adic } : { codigo: code, cant, precio: pr, descuento: desc });
+      }
+      if (!lineas.length) return 'Agrega al menos un producto.';
+      const forma = g('forma'); const venc = g('vencimiento');
+      if (forma === 'Crédito') { if (!venc) return 'Indica la fecha de vencimiento.'; if (venc < fecha) return 'El vencimiento no puede ser anterior a la fecha del documento.'; }
+      if (isC) {
+        const factura = g('factura'); if (!factura) return 'Falta el número de factura.'; const sup = g('suplidor');
+        if (S.compras.some(c => c.suplidor === sup && c.factura.toLowerCase() === factura.toLowerCase())) return 'La factura ' + factura + ' de ' + sup + ' ya fue registrada. Se bloquea para evitar duplicarla.';
+        return apply(s => { s.compras.push({ id: MNI.nextId(s), fecha, factura, suplidor: sup, forma, medio: forma === 'Contado' ? g('medio') : '', vencimiento: forma === 'Crédito' ? venc : '', lineas }); }, { msg: 'Compra registrada. El inventario se actualizó.', guardNeg: false });
+      }
+      const operacion = g('operacion'); if (!operacion) return 'Falta el número de operación.';
+      if (S.ventas.some(v => v.operacion.toLowerCase() === operacion.toLowerCase())) return 'La operación ' + operacion + ' ya existe.';
+      const cliente = g('cliente'); if (forma === 'Crédito' && !cliente) return 'Para vender a crédito escribe el nombre del cliente.';
+      let id; return apply(s => { id = MNI.nextId(s); s.ventas.push({ id, fecha, operacion, cliente: forma === 'Crédito' ? cliente : '', forma, vencimiento: forma === 'Crédito' ? venc : '', lineas }); }, { msg: 'Venta registrada. Se descontó del inventario.', mark: s => { s.ventas.find(v => v.id === id).autorizada = true; } });
+    },
+  });
+}
+
+/* ---------- pagos y cobros ---------- */
+function pagoForm(key, tipo) {
+  const isP = tipo === 'cxp'; const d = MNI.docsAt(S, R, tipo, MNI.END, hoyStr()).find(x => x.key === key); if (!d) return;
+  openForm({
+    title: (isP ? 'Pago / abono a ' + d.suplidor : 'Cobro a ' + d.cliente), intro: (isP ? 'Factura <b>' + esc(d.factura) : 'Operación <b>' + esc(d.operacion)) + '</b> · saldo pendiente <b>' + money(d.saldo) + '</b>',
+    fields: [{ n: 'fecha', l: 'Fecha', t: 'date', req: 1, v: hoyStr() }, { n: 'monto', l: 'Monto (RD$)', t: 'number', step: '0.01', min: 0, req: 1, v: d.saldo, help: 'Puede ser un abono parcial' }, { n: 'medio', l: 'Medio', t: 'select', opts: ['Efectivo', 'Banco'] }],
+    onSubmit: async v => {
+      if (!(v.monto > 0)) return 'El monto debe ser mayor que cero.'; if (v.monto > d.saldo + 0.005) return 'El monto (' + money(v.monto) + ') es mayor que el saldo pendiente (' + money(d.saldo) + '). No se permite pagar de más.';
+      if (v.fecha < d.fecha) return 'La fecha no puede ser anterior a la del documento (' + fdate(d.fecha) + ').';
+      const coll = isP ? S.pagos : S.cobros;
+      if (coll.some(p => p.docKey === key && p.fecha === v.fecha && Math.abs(p.monto - v.monto) < 0.005) && !(await confirmBox('Ya existe un ' + (isP ? 'pago' : 'cobro') + ' de <b>' + money(v.monto) + '</b> con esa misma fecha para este documento. ¿Es un registro duplicado?', { ok: 'No, es otro pago', no: 'Cancelar' }))) return false;
+      return apply(s => { (isP ? s.pagos : s.cobros).push({ id: MNI.nextId(s), fecha: v.fecha, docKey: key, monto: MNI.r2(v.monto), medio: v.medio }); }, { msg: isP ? 'Pago registrado' : 'Cobro registrado', guardNeg: false });
+    },
+  });
+}
+function iniForm(tipo) {
+  const isP = tipo === 'cxp';
+  const fields = [isP ? { n: 'nombre', l: 'Suplidor', t: 'select', opts: S.suplidores.map(s => s.nombre) } : { n: 'nombre', l: 'Cliente', req: 1 }, { n: 'ref', l: isP ? 'Número de factura' : 'Referencia', req: 1 },
+    { n: 'fecha', l: 'Fecha de emisión', t: 'date', req: 1, v: S.config.fechaInicio }, { n: 'vencimiento', l: 'Fecha de vencimiento', t: 'date', req: 1, v: MNI.addDays(S.config.fechaInicio, 30) }, { n: 'monto', l: 'Monto pendiente (RD$)', t: 'number', step: '0.01', min: 0.01, req: 1 }];
+  if (isP && !S.suplidores.length) return toast('Primero registra al menos un suplidor.', true);
+  openForm({
+    title: isP ? 'Deuda anterior con un suplidor' : 'Fiao anterior de un cliente', intro: 'Para lo que ya se debía <b>antes</b> de empezar a usar el sistema. Se suma al capital inicial correspondiente.', fields,
+    onSubmit: v => apply(s => { const o = isP ? { id: MNI.nextId(s), suplidor: v.nombre, factura: v.ref, fecha: v.fecha, vencimiento: v.vencimiento, monto: v.monto } : { id: MNI.nextId(s), cliente: v.nombre, operacion: v.ref, fecha: v.fecha, vencimiento: v.vencimiento, monto: v.monto }; (isP ? s.cxpIni : s.cxcIni).push(o); }, { msg: 'Saldo anterior registrado', guardNeg: false }),
+  });
+}
+
+/* ---------- caja y bancos ---------- */
+function movForm() {
+  const tipos = [['aporte', 'Aporte del dueño (pone dinero al negocio)'], ['retiro', 'Retiro del dueño (saca dinero para él)'], ['prestamo', 'Préstamo recibido'], ['pago_prestamo', 'Pago de préstamo'], ['deposito', 'Depósito: de caja a banco'], ['retiro_banco', 'Retiro: de banco a caja'], ['otro_ingreso', 'Otro ingreso (que no es venta)'], ['otro_gasto', 'Otro gasto (intereses, impuestos…)']];
+  if (S.config.itbis.activo) tipos.push(['pago_itbis', 'Pago de ITBIS a la DGII']);
+  openForm({
+    title: 'Movimiento de caja o banco', intro: 'Aquí van los movimientos que <b>no son</b> ventas, compras ni gastos normales. Un retiro del dueño <b>no es un gasto</b>.',
+    fields: [{ n: 'tipo', l: 'Tipo de movimiento', t: 'select', opts: tipos, full: 1 }, { n: 'fecha', l: 'Fecha', t: 'date', req: 1, v: hoyStr() }, { n: 'monto', l: 'Monto (RD$)', t: 'number', step: '0.01', min: 0.01, req: 1 }, { n: 'cuenta', l: 'Cuenta', t: 'select', opts: ['Caja', 'Banco'] },
+      { n: 'categoria', l: 'Clase de gasto', t: 'select', opts: ['Intereses', 'Impuestos', 'Otros'] }, { n: 'concepto', l: 'Concepto', v: '', full: 1, ph: 'Opcional' }],
+    onOpen: form => { const t = () => { const v = form.elements.tipo.value; $('[data-fw=cuenta]', form).hidden = v === 'deposito' || v === 'retiro_banco'; $('[data-fw=categoria]', form).hidden = v !== 'otro_gasto'; }; form.elements.tipo.addEventListener('change', t); t(); },
+    onSubmit: v => { if (!(v.monto > 0)) return 'El monto debe ser mayor que cero.';
+      return apply(s => { s.movimientos.push({ id: MNI.nextId(s), fecha: v.fecha, tipo: v.tipo, concepto: v.concepto, monto: MNI.r2(v.monto), cuenta: v.cuenta, categoria: v.tipo === 'otro_gasto' ? v.categoria : '' }); }, { msg: 'Movimiento registrado', guardNeg: false }); },
+  });
+}
+async function cierreSave() {
+  const f = filters.cierreFecha || (range()[1] > hoyStr() ? hoyStr() : range()[1]); const ci = MNI.cierreInfo(S, R, f);
+  const inp = $('#cc'); const v = parseFloat(inp.value); if (isNaN(v) || v < 0) return toast('Escribe el efectivo contado.', true);
+  const dif = MNI.r2(v - ci.esperado); const nota = $('#cn').value.trim();
+  if (Math.abs(dif) > 0.004 && !(await confirmBox(`El efectivo contado es <b>${money(v)}</b> y debería haber <b>${money(ci.esperado)}</b>.\n${dif < 0 ? '<b>Falta</b> ' : '<b>Sobra</b> '}${money(Math.abs(dif))}.\n\nAntes de guardar, revisa cobros, cambios, gastos o retiros sin anotar. ¿Guardar el cierre con esta diferencia?`, { ok: 'Guardar con diferencia', no: 'Revisar' }))) return;
+  await apply(s => { s.cierres = s.cierres.filter(c => c.fecha !== f); s.cierres.push({ id: MNI.nextId(s), fecha: f, esperado: ci.esperado, contado: v, diferencia: dif, nota }); }, { msg: Math.abs(dif) < 0.005 ? 'Caja cuadrada' : 'Cierre guardado con diferencia', guardNeg: false });
+}
+
+/* ---------- gastos ---------- */
+function gastoForm(id) {
+  const g0 = id ? S.gastos.find(x => x.id === id) : null; const cats = GCAT.map(x => x[0]); if (g0 && !cats.includes(g0.categoria)) cats.push(g0.categoria);
+  openForm({
+    title: g0 ? 'Editar gasto' : 'Registrar gasto',
+    fields: [{ n: 'fecha', l: 'Fecha', t: 'date', req: 1, v: g0 ? g0.fecha : hoyStr() }, { n: 'concepto', l: 'Concepto', req: 1, v: g0 ? g0.concepto : '' }, { n: 'categoria', l: 'Categoría', t: 'select', opts: cats, v: g0 ? g0.categoria : cats[0] },
+      { n: 'tipo', l: 'Tipo de gasto', t: 'select', opts: ['Fijo', 'Variable'], v: g0 ? g0.tipo : 'Fijo', help: 'Fijo: lo pagas aunque vendas poco' }, { n: 'monto', l: 'Monto (RD$)', t: 'number', step: '0.01', min: 0.01, req: 1, v: g0 ? g0.monto : '' }, { n: 'medio', l: 'Pagado con', t: 'select', opts: ['Efectivo', 'Banco'], v: g0 ? g0.medio : 'Efectivo' }],
+    onOpen: form => { if (!g0) form.elements.categoria.addEventListener('change', () => { const c = GCAT.find(x => x[0] === form.elements.categoria.value); if (c) form.elements.tipo.value = c[1]; }); if (!g0) { const c = GCAT.find(x => x[0] === form.elements.categoria.value); if (c) form.elements.tipo.value = c[1]; } },
+    onSubmit: v => { if (!(v.monto > 0)) return 'El monto debe ser mayor que cero.';
+      return apply(s => { const o = { id: g0 ? g0.id : MNI.nextId(s), fecha: v.fecha, concepto: v.concepto, categoria: v.categoria, tipo: v.tipo, monto: MNI.r2(v.monto), medio: v.medio }; if (g0) s.gastos[s.gastos.findIndex(x => x.id === g0.id)] = o; else s.gastos.push(o); }, { msg: 'Gasto guardado', guardNeg: false }); },
+  });
+}
+
+/* ---------- devoluciones y ajustes ---------- */
+function devForm() {
+  if (!S.ventas.length && !S.compras.length) return toast('Aún no hay ventas ni compras para devolver.', true);
+  const remaining = (tipo, refId, code, orig) => orig - S.devoluciones.filter(d => d.tipo === tipo && d.refId === refId && d.codigo === code).reduce((t, d) => t + d.cant, 0);
+  openForm({
+    title: 'Registrar devolución', intro: 'Una devolución se hace siempre contra una <b>venta</b> o una <b>compra</b> ya registrada.',
+    fields: [{ n: 'tipo', l: 'Tipo', t: 'select', opts: [['venta', 'De un cliente (devuelve algo que compró)'], ['compra', 'A un suplidor (le devuelvo mercancía)']], full: 1 }, { n: 'doc', l: 'Documento', t: 'select', opts: [], full: 1 }, { n: 'codigo', l: 'Producto', t: 'select', opts: [] },
+      { n: 'cant', l: 'Cantidad devuelta', t: 'number', min: 0, req: 1, help: '' }, { n: 'destino', l: 'El dinero se maneja así', t: 'select', opts: [] }, { n: 'fecha', l: 'Fecha', t: 'date', req: 1, v: hoyStr() }, { n: 'motivo', l: 'Motivo', req: 1, full: 1 }],
+    onOpen: form => {
+      const E = form.elements;
+      const docs = () => E.tipo.value === 'venta' ? R.ventas : R.compras;
+      const fillDocs = () => { const t = E.tipo.value; const list = docs().filter(d => d.lineas.some(l => remaining(t, d.id, l.codigo, l.cant) > 1e-9)).sort((a, b) => b.fecha.localeCompare(a.fecha));
+        E.doc.innerHTML = list.length ? list.map(d => `<option value="${d.id}">${esc(t === 'venta' ? d.operacion : d.factura)} · ${fdate(d.fecha)} · ${t === 'venta' ? esc(d.cliente || d.forma) : esc(d.suplidor)} · ${money(d.total)}</option>`).join('') : '<option value="">(no hay documentos con mercancía por devolver)</option>'; fillProd(); };
+      const fillProd = () => { const t = E.tipo.value; const d = docs().find(x => String(x.id) === E.doc.value); const ls = d ? d.lineas.filter(l => remaining(t, d.id, l.codigo, l.cant) > 1e-9) : [];
+        E.codigo.innerHTML = ls.map(l => `<option value="${esc(l.codigo)}">${esc(l.codigo)} · ${esc((R.P[l.codigo] || {}).nombre || '')}</option>`).join('');
+        const dest = !d ? [] : d.forma === 'Crédito' ? [['Deuda', t === 'venta' ? 'Reduce lo que me debe el cliente' : 'Reduce lo que le debo al suplidor']] : (t === 'venta' ? (d.forma === 'Efectivo' ? [['Efectivo', 'Devuelvo el efectivo'], ['Banco', 'Devuelvo por banco']] : [['Banco', 'Devuelvo por banco'], ['Efectivo', 'Devuelvo el efectivo']]) : (d.medio === 'Banco' ? [['Banco', 'Me lo devuelven al banco'], ['Efectivo', 'Me lo devuelven en efectivo']] : [['Efectivo', 'Me lo devuelven en efectivo'], ['Banco', 'Me lo devuelven al banco']]));
+        E.destino.innerHTML = dest.map(x => `<option value="${x[0]}">${x[1]}</option>`).join(''); max(); };
+      const max = () => { const t = E.tipo.value; const d = docs().find(x => String(x.id) === E.doc.value); const l = d && d.lineas.find(x => x.codigo === E.codigo.value); const rem = l ? remaining(t, d.id, l.codigo, l.cant) : 0; E.cant.max = rem; E.cant.closest('.f').querySelector('small') || E.cant.closest('.f').insertAdjacentHTML('beforeend', '<small></small>'); E.cant.closest('.f').querySelector('small').textContent = l ? 'Máximo que se puede devolver: ' + qty(rem) : ''; E.cant.dataset.max = rem; };
+      E.tipo.addEventListener('change', fillDocs); E.doc.addEventListener('change', fillProd); E.codigo.addEventListener('change', max); fillDocs();
+    },
+    onSubmit: v => {
+      if (!v.doc) return 'Elige el documento.'; const max = parseFloat($('#ff_cant').dataset.max); if (!(v.cant > 0)) return 'La cantidad debe ser mayor que cero.'; if (v.cant > max + 1e-9) return 'No puedes devolver más de ' + qty(max) + '.';
+      const refId = parseInt(v.doc, 10); const d = (v.tipo === 'venta' ? R.ventas : R.compras).find(x => x.id === refId); if (d && v.fecha < d.fecha) return 'La devolución no puede ser anterior al documento (' + fdate(d.fecha) + ').';
+      return apply(s => { s.devoluciones.push({ id: MNI.nextId(s), fecha: v.fecha, tipo: v.tipo, refId, codigo: v.codigo, cant: v.cant, destino: v.destino, motivo: v.motivo }); }, { msg: 'Devolución registrada' });
+    },
+  });
+}
+function ajForm() {
+  if (!S.productos.length) return toast('Primero registra productos.', true);
+  openForm({
+    title: 'Merma o ajuste de inventario', intro: 'Mercancía dañada, vencida o perdida sale del inventario y se cuenta como <b>pérdida</b>.',
+    fields: [{ n: 'fecha', l: 'Fecha', t: 'date', req: 1, v: hoyStr() }, { n: 'codigo', l: 'Producto', t: 'select', opts: S.productos.map(p => [p.codigo, p.codigo + ' · ' + p.nombre]) }, { n: 'tipo', l: 'Tipo', t: 'select', opts: ['Dañado', 'Vencido', 'Perdido/robo', 'Ajuste por conteo'] },
+      { n: 'signo', l: 'El ajuste es', t: 'select', opts: [['-', 'Faltante (baja el inventario)'], ['+', 'Sobrante (sube el inventario)']] }, { n: 'cant', l: 'Cantidad', t: 'number', min: 0, req: 1 }, { n: 'motivo', l: 'Motivo', req: 1, full: 1 }],
+    onOpen: form => { const t = () => { $('[data-fw=signo]', form).hidden = form.elements.tipo.value !== 'Ajuste por conteo'; }; form.elements.tipo.addEventListener('change', t); t(); },
+    onSubmit: v => { if (!(v.cant > 0)) return 'La cantidad debe ser mayor que cero.'; const cant = v.tipo === 'Ajuste por conteo' && v.signo === '+' ? v.cant : -v.cant;
+      return apply(s => { s.ajustes.push({ id: MNI.nextId(s), fecha: v.fecha, codigo: v.codigo, tipo: v.tipo, cant, motivo: v.motivo }); }, { msg: 'Ajuste registrado' }); },
+  });
+}
+
+/* ---------- conteo físico ---------- */
+function conteoTotals() {
+  const f = S.conteo.fecha || hoyStr(); let tv = 0, n = 0;
+  $$('#tConteo tbody tr').forEach(tr => {
+    const inp = tr.querySelector('.cinp'); const code = inp.dataset.cod; const has = inp.value !== '';
+    const reg = MNI.invAt(R, code, f).q; const dif = has ? parseFloat(inp.value) - reg : 0; const cu = MNI.avgCost(R, code, f); const vd = MNI.r2(dif * cu);
+    const tds = tr.querySelectorAll('td'); tds[4].textContent = has ? qty(dif) : ''; tds[4].className = 'num ' + cls(dif); tds[6].textContent = has ? money(vd) : ''; tds[6].className = 'num ' + cls(vd);
+    if (has) { tv += vd; if (Math.abs(dif) > 1e-9) n++; }
+  });
+  const ft = $('#tConteo tfoot tr'); if (ft) ft.innerHTML = `<td colspan="6">${n} productos con diferencia</td><td class="num ${cls(tv)}">${money(tv)}</td><td></td>`;
+}
+async function conteoApply() {
+  const f = S.conteo.fecha || hoyStr(); const items = []; let tv = 0;
+  S.productos.forEach(p => { const it = S.conteo.items[p.codigo]; if (!it || it.fisica === '' || it.fisica === undefined || it.fisica === null) return; const reg = MNI.invAt(R, p.codigo, f).q; const dif = Math.round((Number(it.fisica) - reg) * 1000) / 1000; if (Math.abs(dif) > 1e-9) { items.push({ p, dif, obs: it.obs || '' }); tv += dif * MNI.avgCost(R, p.codigo, f); } });
+  if (!items.length) return toast('No hay diferencias para aplicar. Escribe las cantidades físicas primero.', true);
+  if (!(await confirmBox(`Se crearán <b>${items.length}</b> ajustes por conteo, con fecha ${fdate(f)}, por un valor neto de <b>${money(tv)}</b>.\nDespués, el inventario registrado será igual a lo que contaste.\n\nInvestiga primero el porqué de las diferencias. ¿Aplicar?`, { ok: 'Aplicar ajustes', no: 'Todavía no' }))) return;
+  const err = await apply(s => { items.forEach(x => s.ajustes.push({ id: MNI.nextId(s), fecha: f, codigo: x.p.codigo, tipo: 'Ajuste por conteo', cant: x.dif, motivo: 'Conteo físico del ' + fdate(f) + (x.obs ? ' · ' + x.obs : '') })); s.conteo.items = {}; }, { msg: 'Ajustes aplicados. Inventario actualizado.', guardNeg: false });
+  if (err) toast(err, true);
+}
+
+/* ---------- historial / kardex ---------- */
+function showKardex(code) {
+  const p = R.P[code]; if (!p) return; const T = { ini: 'Inventario inicial', compra: 'Compra', venta: 'Venta', devventa: 'Devolución de cliente', devcompra: 'Devolución a suplidor', ajuste: 'Ajuste por conteo', merma: 'Merma / pérdida' };
+  const rows = R.K[code].map(e => `<tr><td>${e.date === MNI.BEGIN ? '' : fdate(e.date)}</td><td>${T[e.tipo] || e.tipo}</td><td class="num ${cls(e.dq)}">${qty(e.dq)}</td><td class="num ${cls(e.dv)}">${money(e.dv)}</td><td class="num ${cls(e.q)}"><b>${qty(e.q)}</b></td><td class="num">${money(e.v)}</td><td class="num">${e.q > 1e-9 ? nf(e.v / e.q, 2) : ''}</td></tr>`);
+  openShell({ title: 'Kardex · ' + p.codigo + ' · ' + p.nombre, wide: true, noOk: true, noFocus: true, onSubmit: () => true, body: `<p class="muted" style="margin-top:0">Cada movimiento con su efecto en cantidad y valor. El costo unitario es el promedio ponderado móvil.</p>` + tbl(['Fecha', 'Movimiento', ['Cantidad', 'num'], ['Valor mov.', 'num'], ['Existencia', 'num'], ['Valor total', 'num'], ['Costo prom.', 'num']], rows) });
+}
+function showSupHist(id) {
+  const s = S.suplidores.find(x => x.id === id); if (!s) return; const h = hoyStr();
+  const docs = MNI.docsAt(S, R, 'cxp', MNI.END, h).filter(d => d.suplidor === s.nombre).sort((a, b) => b.fecha.localeCompare(a.fecha));
+  const cont = R.compras.filter(c => c.suplidor === s.nombre && c.forma === 'Contado').sort((a, b) => b.fecha.localeCompare(a.fecha));
+  const rows = docs.map(d => `<tr><td>${fdate(d.fecha)}</td><td>${esc(d.factura)}</td><td>${fdate(d.vencimiento)}</td><td class="num">${money(d.total)}</td><td class="num">${money(d.abonos)}</td><td class="num ${d.saldo > 0.005 ? 'neg' : ''}"><b>${money(d.saldo)}</b></td><td>${badge(d.estado, d.estado === 'Pagada' ? 'ok' : d.estado === 'Vencida' ? 'bad' : 'warn')}</td><td>${d.saldo > 0.005 ? btn('pagar', 'Abonar', { key: d.key, tipo: 'cxp' }, 'sm') : ''}</td></tr>`)
+    .concat(cont.map(c => `<tr><td>${fdate(c.fecha)}</td><td>${esc(c.factura)}</td><td></td><td class="num">${money(c.total)}</td><td class="num">${money(c.total)}</td><td class="num">${money(0)}</td><td>${badge('Contado', 'ok')}</td><td></td></tr>`));
+  openShell({ title: 'Historial · ' + s.nombre, wide: true, noOk: true, noFocus: true, onSubmit: () => true, body: `<p class="muted" style="margin-top:0">${esc(s.rnc || '')} ${esc(s.telefono || '')} ${esc(s.contacto ? '· ' + s.contacto : '')}</p>` + tbl(['Fecha', 'Factura', 'Vence', ['Importe', 'num'], ['Pagado', 'num'], ['Saldo', 'num'], 'Estado', ''], rows, { empty: 'Este suplidor todavía no tiene facturas.' }) });
+}
+
+/* ---------- eliminar ---------- */
+async function eliminar(msg, mutate, ok) { if (!(await confirmBox(msg, { ok: 'Sí, borrar', danger: true }))) return; const e = await apply(mutate, { msg: ok }); if (typeof e === 'string') toast(e, true); }
+const A = {
+  close: () => closeModal(),
+  go: d => { location.hash = '#/' + d.to; },
+  tab: d => { ui.tab[d.k] = d.v; render(); },
+  print: () => window.print(),
+  'prod-new': () => prodForm(), 'prod-edit': d => prodForm(d.id),
+  'prod-del': d => { const c = d.id; if (S.compras.some(x => x.lineas.some(l => l.codigo === c)) || S.ventas.some(x => x.lineas.some(l => l.codigo === c)) || S.ajustes.some(x => x.codigo === c) || S.devoluciones.some(x => x.codigo === c)) return toast('Este producto tiene movimientos. Márcalo como "Inactivo" en vez de borrarlo.', true); eliminar('¿Borrar el producto <b>' + esc(c) + '</b>?', s => { s.productos = s.productos.filter(p => p.codigo !== c); }, 'Producto borrado'); },
+  'sup-new': () => supForm(), 'sup-edit': d => supForm(parseInt(d.id, 10)), 'sup-hist': d => showSupHist(parseInt(d.id, 10)),
+  'sup-del': d => { const s = S.suplidores.find(x => x.id === parseInt(d.id, 10)); if (S.compras.some(c => c.suplidor === s.nombre) || S.cxpIni.some(c => c.suplidor === s.nombre)) return toast('Este suplidor tiene facturas registradas y no se puede borrar.', true); eliminar('¿Borrar al suplidor <b>' + esc(s.nombre) + '</b>?', x => { x.suplidores = x.suplidores.filter(y => y.id !== s.id); }, 'Suplidor borrado'); },
+  'compra-new': () => docForm('compra'), 'venta-new': () => docForm('venta'),
+  'compra-del': d => { const id = parseInt(d.id, 10); if (S.pagos.some(p => p.docKey === 'C' + id) || S.devoluciones.some(x => x.tipo === 'compra' && x.refId === id)) return toast('Esta compra tiene pagos o devoluciones. Bórralos primero.', true); eliminar('¿Borrar esta compra? El inventario se recalculará.', s => { s.compras = s.compras.filter(c => c.id !== id); }, 'Compra borrada'); },
+  'venta-del': d => { const id = parseInt(d.id, 10); if (S.cobros.some(p => p.docKey === 'V' + id) || S.devoluciones.some(x => x.tipo === 'venta' && x.refId === id)) return toast('Esta venta tiene cobros o devoluciones. Bórralos primero.', true); eliminar('¿Borrar esta venta? La mercancía volverá al inventario.', s => { s.ventas = s.ventas.filter(c => c.id !== id); }, 'Venta borrada'); },
+  pagar: d => { closeModal(); pagoForm(d.key, d.tipo || 'cxp'); }, cobrar: d => pagoForm(d.key, 'cxc'),
+  'ini-new': d => iniForm(d.tipo),
+  'ini-del': d => { const isP = d.tipo === 'cxp'; const id = parseInt(d.key.replace(/\D/g, ''), 10); if ((isP ? S.pagos : S.cobros).some(p => p.docKey === d.key)) return toast('Tiene pagos o cobros registrados. Bórralos primero.', true); eliminar('¿Borrar este saldo anterior?', s => { if (isP) s.cxpIni = s.cxpIni.filter(x => x.id !== id); else s.cxcIni = s.cxcIni.filter(x => x.id !== id); }, 'Saldo borrado'); },
+  'reg-del': d => { const id = parseInt(d.id, 10); eliminar('¿Borrar este registro? El saldo de la factura volverá a subir.', s => { if (d.tipo === 'cxp') s.pagos = s.pagos.filter(x => x.id !== id); else s.cobros = s.cobros.filter(x => x.id !== id); }, 'Registro borrado'); },
+  'mov-new': () => movForm(), 'cierre-save': () => cierreSave(),
+  'gasto-new': () => gastoForm(), 'gasto-edit': d => gastoForm(parseInt(d.id, 10)),
+  'gasto-del': d => { const id = parseInt(d.id, 10); eliminar('¿Borrar este gasto?', s => { s.gastos = s.gastos.filter(x => x.id !== id); }, 'Gasto borrado'); },
+  'dev-new': () => devForm(), 'aj-new': () => ajForm(),
+  'dev-del': d => { const id = parseInt(d.id, 10); eliminar('¿Borrar esta devolución?', s => { s.devoluciones = s.devoluciones.filter(x => x.id !== id); }, 'Devolución borrada'); },
+  'aj-del': d => { const id = parseInt(d.id, 10); eliminar('¿Borrar este ajuste?', s => { s.ajustes = s.ajustes.filter(x => x.id !== id); }, 'Ajuste borrado'); },
+  kardex: d => showKardex(d.id),
+  'conteo-apply': () => conteoApply(),
+  'conteo-clear': async () => { if (await confirmBox('¿Borrar las cantidades físicas escritas?', { ok: 'Limpiar', danger: true })) { S.conteo.items = {}; saveState(); render(); } },
+  'line-add': () => { const tb = $('#lbody'); tb.insertAdjacentHTML('beforeend', tb.querySelector('.lrow').outerHTML); const tr = tb.lastElementChild; $$('input', tr).forEach(i => { i.value = ''; }); tr.querySelector('select').value = ''; tr.querySelector('.t').textContent = '0.00'; tr.querySelector('.disp').textContent = ''; },
+  'line-del': d => { const tb = $('#lbody'); const tr = d.el.closest('tr'); if (tb.children.length > 1) { tr.remove(); $('#dtot').textContent = '…'; $('#mform').dispatchEvent(new Event('input')); } },
+  csv: d => { const t = document.getElementById(d.id); if (!t) return toast('No hay datos para exportar.', true); const rows = [...t.rows].map(r => [...r.cells].filter(c => !c.querySelector('button')).map(c => '"' + c.textContent.replace(/"/g, '""').trim() + '"').join(',')); download('﻿' + rows.join('\r\n'), (d.name || 'datos') + '.csv', 'text/csv;charset=utf-8'); },
+  'cfg-save': () => { const g = id => $('#' + id).value; const n = id => Math.max(0, parseFloat(g(id)) || 0); S.config.negocio = g('c_negocio').trim() || 'Mi Negocio'; S.config.propietario = g('c_prop').trim(); S.config.fechaInicio = g('c_inicio') || S.config.fechaInicio; S.config.cajaInicial = n('c_caja'); S.config.bancoInicial = n('c_banco'); S.config.equipos = n('c_equipos'); S.config.diasAlertaVence = n('c_vence'); S.config.diasAlertaPago = n('c_pago'); saveState(); render(); toast('Parámetros guardados'); },
+  'itbis-save': () => { const i = S.config.itbis; i.activo = $('#i_act').checked; i.incluido = $('#i_inc').checked; i.tasaGeneral = Math.max(0, parseFloat($('#i_gen').value) || 0); i.tasaReducida = Math.max(0, parseFloat($('#i_red').value) || 0); saveState(); render(); toast(i.activo ? 'ITBIS activado' : 'ITBIS desactivado'); },
+  'list-save': () => { const l = id => $('#' + id).value.split(',').map(x => x.trim()).filter(Boolean); S.config.categorias = l('l_cat'); S.config.unidades = l('l_uni'); saveState(); render(); toast('Listas guardadas'); },
+  backup: () => download(JSON.stringify(S, null, 1), 'respaldo_mi_negocio_inteligente_' + hoyStr() + '.json', 'application/json'),
+  demo: async () => { if ((S.productos.length || S.ventas.length) && !(await confirmBox('Esto <b>reemplaza todos tus datos actuales</b> con datos de demostración. ¿Continuar?', { ok: 'Reemplazar', danger: true }))) return; S = ensure(buildDemo()); initPeriod(); recompute(); saveState(); location.hash = '#/panel'; render(); toast('Datos de demostración cargados (todo es ficticio)'); },
+  reset: async () => { if (!(await confirmBox('Se borrarán <b>todos</b> los datos de este navegador. Esta acción no se puede deshacer. ¿Descargaste un respaldo?', { ok: 'Borrar todo', danger: true, title: 'Borrar todos los datos' }))) return; S = ensure(MNI.emptyState()); initPeriod(); recompute(); saveState(); render(); toast('Datos borrados'); },
+};
+function download(text, name, type) { const a = document.createElement('a'); const url = URL.createObjectURL(new Blob([text], { type })); a.href = url; a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 500); }
+
+/* ---------- eventos globales ---------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act]'); if (!t) return; const act = t.dataset.act; if (!A[act]) return;
+  if (t.tagName === 'A') e.preventDefault();
+  const d = Object.assign({}, t.dataset); d.el = t; const r = A[act](d); if (r && r.catch) r.catch(err => { console.error(err); toast('Error: ' + err.message, true); });
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.period) { period[t.dataset.period] = t.value; if (t.dataset.period === 'preset') { if (t.value === 'mes_sel' && !period.month) period.month = hoyStr().slice(0, 7); if (t.value === 'custom') { const r = range(); period.from = r[0]; period.to = r[1]; } } renderKeep(); }
+  else if (t.dataset.filterSel) { filters[t.dataset.filterSel] = t.value; renderKeep(); }
+  else if (t.dataset.cierre) { filters.cierreFecha = t.value; renderKeep(); }
+  else if (t.classList && t.classList.contains('cinp')) { const c = t.dataset.cod; const it = S.conteo.items[c] || (S.conteo.items[c] = {}); it.fisica = t.value === '' ? '' : parseFloat(t.value); saveState(); conteoTotals(); }
+  else if (t.classList && t.classList.contains('cobs')) { const c = t.dataset.cod; const it = S.conteo.items[c] || (S.conteo.items[c] = {}); it.obs = t.value; saveState(); }
+  else if (t.dataset && t.dataset.cfecha !== undefined) { S.conteo.fecha = t.value; saveState(); render(); }
+  else if (t.id === 'blind') { ui.blind = t.checked; render(); }
+  else if (t.id === 'restore' && t.files[0]) {
+    const fr = new FileReader(); fr.onload = async () => { try { const o = JSON.parse(fr.result); if (!o || !Array.isArray(o.productos)) throw new Error('El archivo no es un respaldo válido.'); if (!(await confirmBox('Se <b>reemplazarán</b> tus datos actuales con los del respaldo. ¿Continuar?', { ok: 'Cargar respaldo', danger: true }))) return; S = ensure(o); initPeriod(); recompute(); saveState(); render(); toast('Respaldo cargado'); } catch (err) { toast('No se pudo cargar: ' + err.message, true); } }; fr.readAsText(t.files[0]); t.value = '';
+  }
+});
+document.addEventListener('input', e => { const t = e.target; if (t.dataset && t.dataset.filter) { filters[t.dataset.filter] = t.value; renderKeep(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#modalRoot').firstChild && !$('#confirmRoot').firstChild) closeModal(); });
+
+/* ---------- render ---------- */
+let lastRoute = '';
+function currentRoute() { const r = location.hash.replace(/^#\//, ''); return views[r] ? r : 'panel'; }
+function renderNav() {
+  const route = currentRoute(); const al = MNI.alertas(S, R, hoyStr()); const nAlta = al.filter(x => x.nivel === 'alta').length;
+  $('#nav').innerHTML = NAV.map(([k, l], i) => (i === 0 ? '<div class="sep">Inicio</div>' : i === 1 ? '<div class="sep">Registros</div>' : i === 5 ? '<div class="sep">Deudas y dinero</div>' : i === 11 ? '<div class="sep">Resultados y control</div>' : '') +
+    `<a href="#/${k}" class="${route === k ? 'on' : ''}" data-nav>${esc(l)}${k === 'alertas' && al.length ? `<span class="cnt" style="${nAlta ? '' : 'background:#b58400'}">${al.length}</span>` : ''}</a>`).join('');
+}
+function render() {
+  recompute(); const route = currentRoute(); renderNav();
+  let html; try { html = views[route](); } catch (e) { console.error(e); html = `<div class="card"><h2>Ocurrió un problema al mostrar esta pantalla</h2><p>${esc(e.message)}</p><p>Tus datos están a salvo. Descarga un respaldo en <a href="#/config">Parámetros y datos</a> e intenta de nuevo.</p></div>`; }
+  const m = $('#main'); m.innerHTML = html + `<div class="foot">Mi Negocio Inteligente · NÚMEROS Y NEGOCIOS RD · Herramienta educativa y de control interno; no es un sistema fiscal ni contable certificado.</div>`;
+  if (route !== lastRoute) { window.scrollTo(0, 0); lastRoute = route; }
+  document.title = (NAV.find(n => n[0] === route) || [0, 'Panel'])[1] + ' · Mi Negocio Inteligente';
+  document.body.classList.remove('navopen');
+  const rs = $('#restore'); if (rs) rs.addEventListener('click', e => e.stopPropagation());
+}
+function renderKeep() {
+  const ae = document.activeElement; const key = ae && ae.id ? '#' + ae.id : (ae && ae.dataset && ae.dataset.cod ? '.' + ae.className.split(' ')[0] + '[data-cod="' + ae.dataset.cod + '"]' : null); const pos = ae && ae.selectionStart !== undefined ? ae.selectionStart : null;
+  render(); if (key) { const el = $(key); if (el) { el.focus(); try { if (pos !== null) el.setSelectionRange(pos, pos); } catch (e) { } } }
+}
+
+/* ---------- arranque ---------- */
+function boot() {
+  S = loadState(); initPeriod(); recompute(); saveState();
+  window.addEventListener('hashchange', render);
+  $('#menuBtn').addEventListener('click', () => document.body.classList.toggle('navopen'));
+  $('#nav').addEventListener('click', e => { if (e.target.closest('a')) document.body.classList.remove('navopen'); });
+  render();
+  window.__MNI = { get S() { return S; }, get R() { return R; }, MNI, period };
+}
+document.addEventListener('DOMContentLoaded', boot);
+</script></body></html>
