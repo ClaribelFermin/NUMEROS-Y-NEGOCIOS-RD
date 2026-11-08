@@ -146,6 +146,13 @@ input.search{min-width:220px}
   tr{page-break-inside:avoid}
 }
 </style></head><body>
+  <div id="access-container">
+  <form id="access-form">
+    <input type="text" id="passcode">
+    <button type="submit">Acceder</button>
+  </form>
+</div>
+  <div id="main-content" style="display: none;">
 <header class="top"><button id="menuBtn" aria-label="Abrir menú">☰</button><div class="brand"><b>Mi Negocio Inteligente</b><small>NÚMEROS Y NEGOCIOS RD</small></div><div class="grow"></div><div id="saveState"></div></header>
 <nav id="nav" aria-label="Secciones"></nav>
 <main id="main"></main>
@@ -1665,4 +1672,4 @@ function boot() {
   window.__MNI = { get S() { return S; }, get R() { return R; }, MNI, period };
 }
 document.addEventListener('DOMContentLoaded', boot);
-</script></body></html>
+</script></div></body></html>
